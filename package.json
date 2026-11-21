@@ -6,6 +6,8 @@
     "dev": "npx --yes serve site -l 8765",
     "check": "node scripts/check-manifest.mjs",
     "manifest": "node scripts/check-manifest.mjs --write",
-    "deploy": "npx --yes wrangler@latest deploy"
+    "deploy": "npx --yes wrangler@latest deploy",
+    "pwa": "node scripts/build-pwa.mjs",
+    "test": "node tests/fx.test.mjs && node tests/content.test.mjs && node scripts/build-pwa.mjs --check && python3 scripts/validate_spec.py"
   }
 }

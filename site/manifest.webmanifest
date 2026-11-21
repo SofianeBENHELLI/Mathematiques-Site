@@ -1,0 +1,21 @@
+{
+  "name": "Les maths de Sanaa",
+  "short_name": "Maths Sanaa",
+  "description": "Cours, ateliers interactifs et exercices corrigés de mathématiques, Première et Terminale spécialité.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#3459e8",
+  "background_color": "#f5f7fb",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Fonctions", "url": "/fonctions/", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Dérivation", "url": "/derivation/", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
