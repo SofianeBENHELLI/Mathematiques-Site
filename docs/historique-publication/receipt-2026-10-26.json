@@ -1,0 +1,35 @@
+{
+  "account_id": "29c23e9ef1f1f235ffec98705e4069e7",
+  "product": "workers-static-assets",
+  "project_name": "mathematiques",
+  "config_file": "/Users/sxz/Documents/Codex/2026-10-26/j-ai/outputs/mathematiques/wrangler.json",
+  "public_directory": "/Users/sxz/Documents/Codex/2026-10-26/j-ai/outputs/mathematiques/public",
+  "original_source_directory": "/Users/sxz/Documents/Codex/2026-09-13/alors-je-voudrais-que-tu-me/maths-sanaa",
+  "source_sites": {
+    "all": "/Users/sxz/Documents/Codex/2026-09-13/alors-je-voudrais-que-tu-me/maths-sanaa",
+    "polynomes": "/Users/sxz/Documents/Codex/2026-09-13/alors-je-voudrais-que-tu-me/maths-sanaa/polynomes",
+    "suites": "/Users/sxz/Documents/Codex/2026-09-13/alors-je-voudrais-que-tu-me/maths-sanaa/suites"
+  },
+  "url": "https://mathematiques.benhelli.org/",
+  "urls": {
+    "polynomes": "https://mathematiques.benhelli.org/polynomes/",
+    "suites": "https://mathematiques.benhelli.org/suites/",
+    "bac_blanc": "https://mathematiques.benhelli.org/#/bac-blanc"
+  },
+  "workers_url": "https://mathematiques.sofiane-benhelli.workers.dev",
+  "hostname": "mathematiques.benhelli.org",
+  "version_id": "baa781a0-a9a0-407b-ae18-428a16be2d95",
+  "previous_version_id": "cf8b2bda-0543-4d1e-894a-bb3496a33a82",
+  "recorded_at": "2026-10-26T21:41:59.221256+00:00",
+  "status": "published_and_browser_verified",
+  "verification": {
+    "https": "Version visible sur le domaine personnalisé ; trigonométrie, suites et polynômes vérifiés en production",
+    "browser": "Réponse numérique, passage à l’exercice suivant, aide du cercle et attribution de réussite avec aide vérifiés ; quiz suites et exercices polynômes fonctionnels",
+    "responsive": "Dix modules du portail et deux ateliers historiques vérifiés à 390 px sans débordement ; contrôle visuel ordinateur",
+    "tests": "2239 contrôles modèles/contenus, progression et migration, 12 parcours, 235 contrôles bac blanc : succès",
+    "console": "Pas d’erreur applicative observée ; avertissements sans rapport de l’extension Chrome"
+  },
+  "screenshot": "/Users/sxz/Documents/Codex/2026-09-13/alors-je-voudrais-que-tu-me/outputs/sanaa-parcours-progressifs.png",
+  "update_notes": "Source principale maths-sanaa/. Publier index.html, assets/, content/, polynomes/, suites/ dans le bundle existant. Conserver les chemins et le domaine.",
+  "change": "Douze parcours progressifs : 120 exercices et 120 quiz, rappels et exemples dans la page, prérequis expliqués et liens facultatifs, cercle d’aide à partir de 90°, reprise des anciens résultats par question."
+}

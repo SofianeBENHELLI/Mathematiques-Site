@@ -1,0 +1,59 @@
+{
+  "account_id": "29c23e9ef1f1f235ffec98705e4069e7",
+  "worker_name": "mathematiques",
+  "source": "/Users/sxz/Documents/Codex/2026-10-26/j-ai/work/mathematiques-source",
+  "hostname": "mathematiques.benhelli.org",
+  "status": "prepared_locally",
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 3739,
+      "sha256": "1ff6ec2c3cb99ef759564decb2c7201b2eb7c58b94d3e2bfda1e82095fc468df"
+    },
+    {
+      "path": "polynomes/app.js",
+      "bytes": 9612,
+      "sha256": "f323462989e91cc3fdc89e82a026d5c304dc22547766e09c08f65e574680c481"
+    },
+    {
+      "path": "polynomes/index.html",
+      "bytes": 18932,
+      "sha256": "2204783500757f685576ff1b32fa0f1d949e3204ac95f1a9f8f768d3f69f8fd8"
+    },
+    {
+      "path": "polynomes/navigation.js",
+      "bytes": 2629,
+      "sha256": "6ac68754980d89033bd409e0c1ac618c33f27bfecc46f071e1261b9d52250212"
+    },
+    {
+      "path": "polynomes/study.js",
+      "bytes": 10419,
+      "sha256": "ee015180d7bd931db4a141b73a90f5c39285b1a535cc1f95dfde988bf09c3e07"
+    },
+    {
+      "path": "polynomes/style.css",
+      "bytes": 18197,
+      "sha256": "93a5cbfc413be95ff7924f7e307394aff9010979f2a75a400a3f830e55cf6fe5"
+    },
+    {
+      "path": "suites/app.js",
+      "bytes": 16879,
+      "sha256": "9c9758040ff47c89082d64e8e4f7a3c258cd8cf18923c9a3e16f16d6b05c24d1"
+    },
+    {
+      "path": "suites/index.html",
+      "bytes": 16567,
+      "sha256": "cf5faf3555ae6cf6845f038dea5ed47df5d90c06ed82fa2e0fc4ef115214e34e"
+    },
+    {
+      "path": "suites/math.js",
+      "bytes": 3009,
+      "sha256": "3619c13f1d768647a74dead00f1f66a391cd570b15e0ad28c7f96e3b04704f8d"
+    },
+    {
+      "path": "suites/style.css",
+      "bytes": 9217,
+      "sha256": "2871ac96801f0e9d76e24eb2be6a359d5886cbe27e6ef0404ec65611b7435b8a"
+    }
+  ]
+}

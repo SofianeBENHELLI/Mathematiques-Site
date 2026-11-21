@@ -1,0 +1,11 @@
+{
+  "name": "mathematiques-site",
+  "private": true,
+  "description": "Les maths de Sanaa, Premiere specialite (mathematiques.benhelli.org)",
+  "scripts": {
+    "dev": "npx --yes serve site -l 8765",
+    "check": "node scripts/check-manifest.mjs",
+    "manifest": "node scripts/check-manifest.mjs --write",
+    "deploy": "npx --yes wrangler@latest deploy"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  // Worker Cloudflare qui sert le site statique
+  "name": "mathematiques",
+  "account_id": "29c23e9ef1f1f235ffec98705e4069e7",
+  "compatibility_date": "2026-10-26",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": { "directory": "./site" },
+  "routes": [
+    { "pattern": "mathematiques.benhelli.org", "custom_domain": true }
+  ]
+}
