@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Probabilités : conditionnelles, arbres, indépendance | Les maths de Sanaa</title>
+<meta name="description" content="Probabilité conditionnelle, arbres pondérés, formule des probabilités totales, tableaux croisés, indépendance de deux événements et succession d’épreuves : cours, ateliers interactifs et exercices corrigés pour la Première spécialité.">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/mini.css">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Maths Sanaa"><meta name="theme-color" content="#3459e8"></head>
+<body>
+<div class="dedication">Pour Sanaa <span>✦</span> lire une probabilité comme une proportion</div>
+<header><a class="brand" href="#essentiel">probabilités<span>P(A|B)</span></a><span>LE LABO DE SANAA</span><button id="reset" type="button">↺ Réinitialiser</button></header>
+<div id="sitenav" data-current="probabilites"></div>
+<div class="navwrap"><strong id="sticky-formula">P<sub>A</sub>(B) = P(A ∩ B) / P(A)</strong>
+<nav aria-label="Chapitres"><a href="#essentiel">Essentiel</a><a href="#ateliers">Ateliers</a><a href="#exercices">Exercices</a></nav></div>
+<main>
+<section class="hero"><div><p class="eyebrow">PREMIÈRE SPÉCIALITÉ · PROBABILITÉS</p>
+<h1>Une probabilité, c’est <em>une part d’un tout.</em></h1>
+<p>Tu vas voir les probabilités comme des aires, ne plus confondre P<sub>A</sub>(B) et P<sub>B</sub>(A), lire un arbre pondéré sans te tromper et reconnaître deux événements indépendants.</p></div>
+<div class="hero-note"><span>TON PARCOURS</span><b>Proportion → conditionnelle → arbre → totales → indépendance</b><p>Chaque idée a son atelier : manipule d'abord, retiens ensuite.</p></div></section>
+
+<section id="essentiel"><div class="section-heading"><span>01 / L'ESSENTIEL</span><h2>Six idées à posséder.</h2></div>
+<details class="course" open><summary>▤ 1. Vocabulaire et règles de base<span>+</span></summary><div><p class="formula">0 ≤ P(A) ≤ 1 &nbsp;&nbsp; P(Ā) = 1 − P(A)<br>P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</p>
+<p>A ∩ B signifie « A <b>et</b> B », A ∪ B signifie « A <b>ou</b> B » (ou non exclusif). Deux événements sont <b>incompatibles</b> si A ∩ B = ∅ : alors P(A ∪ B) = P(A) + P(B).</p></div></details>
+<details class="course"><summary>▤ 2. Probabilité conditionnelle<span>+</span></summary><div><p class="formula">P<sub>A</sub>(B) = P(A ∩ B) / P(A) &nbsp;&nbsp; (P(A) ≠ 0)<br>P(A ∩ B) = P(A) × P<sub>A</sub>(B)</p>
+<p>P<sub>A</sub>(B) est la probabilité de B <b>sachant que A est réalisé</b> : on se restreint à la part A de l'univers, et on regarde quelle fraction de A est aussi dans B.</p>
+<p class="trap"><b>Piège.</b> P<sub>A</sub>(B) et P<sub>B</sub>(A) sont différents en général : la probabilité d'avoir de la fièvre sachant qu'on a la grippe n'est pas celle d'avoir la grippe sachant qu'on a de la fièvre. Et P(A ∩ B) n'est pas P<sub>A</sub>(B).</p></div></details>
+<details class="course"><summary>▤ 3. Arbre pondéré et probabilités totales<span>+</span></summary><div><p>Sur un arbre, on écrit sur chaque branche la probabilité conditionnelle. La somme des probabilités des branches qui partent d'un même nœud vaut 1. La probabilité d'un chemin est le <b>produit</b> des probabilités le long du chemin.</p>
+<p class="formula">P(B) = P(A ∩ B) + P(Ā ∩ B) = P(A)·P<sub>A</sub>(B) + P(Ā)·P<sub>Ā</sub>(B)</p>
+<p>C'est la formule des probabilités totales : on <b>additionne</b> tous les chemins qui mènent à B. Pour inverser : P<sub>B</sub>(A) = P(A ∩ B)/P(B).</p></div></details>
+<details class="course"><summary>▤ 4. Tableau croisé<span>+</span></summary><div><p>Un tableau d'effectifs donne toutes les probabilités : P(A ∩ B) = effectif(A et B)/total, P(A) = total de la ligne A/total, P<sub>A</sub>(B) = effectif(A et B)/total de la ligne A. Il est idéal pour passer de P<sub>A</sub>(B) à P<sub>B</sub>(A).</p>
+<p>Méthode : remplir le tableau en fraction du total (ou sur un total de 1000 pour éviter les décimales).</p></div></details>
+<details class="course"><summary>▤ 5. Indépendance de deux événements<span>+</span></summary><div><p class="formula">A et B indépendants ⇔ P(A ∩ B) = P(A) × P(B) ⇔ P<sub>A</sub>(B) = P(B)</p>
+<p>Savoir que A est réalisé ne change pas la probabilité de B. Ne pas confondre avec incompatibles : deux événements incompatibles de probabilité non nulle ne sont <b>jamais</b> indépendants (si A se réalise, B ne peut plus se réaliser).</p>
+<p>Pour montrer l'indépendance, on <b>calcule</b> P(A ∩ B) et on le compare à P(A)P(B). Si A et B sont indépendants, Ā et B le sont aussi.</p></div></details>
+<details class="course"><summary>▤ 6. Succession de deux épreuves indépendantes<span>+</span></summary><div><p>Quand deux épreuves se déroulent sans s'influencer (deux lancers, deux tirages avec remise), la probabilité d'un résultat (r₁ ; r₂) est <b>P(r₁) × P(r₂)</b>. Sur l'arbre, les branches du deuxième niveau sont les mêmes quel que soit le premier résultat.</p>
+<p>Exemple : une pièce truquée donne pile avec probabilité 0,6, lancée deux fois : P(deux piles) = 0,36 ; P(exactement un pile) = 2 × 0,6 × 0,4 = 0,48.</p></div></details>
+</section>
+
+<section id="ateliers"><div class="section-heading"><span>02 / MANIPULER</span><h2>Quatre ateliers.</h2></div>
+<div id="lab1"></div><div id="lab2"></div><div id="lab3"></div><div id="lab4"></div></section>
+
+<section id="exercices"><div class="section-heading"><span>03 / S'ENTRAÎNER</span><h2>16 exercices corrigés.</h2></div>
+<p>Niveau ★ : réflexe. ★★ : application directe. ★★★ : raisonnement et rédaction.</p>
+<div id="exos"></div>
+<details class="panel"><summary>Ma checklist de révision <span>+</span></summary><div id="checklist" class="panel-body"></div></details></section>
+<footer><b>Fait pour Sanaa, avec confiance en sa réussite.</b><p>Probabilités · Première générale, spécialité mathématiques. Les ateliers illustrent, ils ne remplacent pas une démonstration.</p></footer>
+</main>
+<script src="../assets/fx.js"></script><script src="../assets/mini.js"></script><script src="content.js"></script><script src="app.js"></script><script src="/assets/nav.js"></script><script src="/assets/pwa.js"></script>
+</body></html>

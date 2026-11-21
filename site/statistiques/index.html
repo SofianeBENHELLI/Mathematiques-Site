@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Statistiques : moyenne, médiane, écart type, boîtes à moustaches | Les maths de Sanaa</title>
+<meta name="description" content="Moyenne, médiane, quartiles, écart type, effet d’une transformation affine et comparaison de distributions par boîtes à moustaches : cours, ateliers interactifs et exercices corrigés pour la Première spécialité.">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/mini.css">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Maths Sanaa"><meta name="theme-color" content="#3459e8"></head>
+<body>
+<div class="dedication">Pour Sanaa <span>✦</span> résumer une série sans la déformer</div>
+<header><a class="brand" href="#essentiel">statistiques<span>x̄</span></a><span>LE LABO DE SANAA</span><button id="reset" type="button">↺ Réinitialiser</button></header>
+<div id="sitenav" data-current="statistiques"></div>
+<div class="navwrap"><strong id="sticky-formula">x̄ = Σ xᵢ/n &nbsp;·&nbsp; σ = √V</strong>
+<nav aria-label="Chapitres"><a href="#essentiel">Essentiel</a><a href="#ateliers">Ateliers</a><a href="#exercices">Exercices</a></nav></div>
+<main>
+<section class="hero"><div><p class="eyebrow">PREMIÈRE SPÉCIALITÉ · STATISTIQUES</p>
+<h1>Une série de nombres, <em>trois ou quatre réponses honnêtes.</em></h1>
+<p>Tu vas choisir l’indicateur qui dit vraiment quelque chose d’une série, calculer médiane, quartiles et écart type sans erreur, et comparer deux distributions d’un coup d’œil.</p></div>
+<div class="hero-note"><span>TON PARCOURS</span><b>Centre → dispersion → transformation → boîtes → comparer</b><p>Chaque idée a son atelier : manipule d'abord, retiens ensuite.</p></div></section>
+
+<section id="essentiel"><div class="section-heading"><span>01 / L'ESSENTIEL</span><h2>Cinq idées à posséder.</h2></div>
+<details class="course" open><summary>▤ 1. Moyenne, médiane, quartiles<span>+</span></summary><div><p class="formula">Moyenne : x̄ = (x₁ + … + xₙ)/n (pondérée : Σ nᵢxᵢ / Σ nᵢ)<br>Médiane : valeur qui partage la série ordonnée en deux moitiés<br>Q₁ : plus petite valeur telle qu'au moins 25 % des valeurs lui soient inférieures ou égales<br>Q₃ : plus petite valeur telle qu'au moins 75 % des valeurs lui soient inférieures ou égales</p>
+<p><b>Méthode.</b> On range les valeurs dans l'ordre croissant. Si n est impair, la médiane est la valeur centrale ; s'il est pair, c'est la moyenne des deux valeurs centrales. Q₁ est la valeur de rang <b>⌈n/4⌉</b> et Q₃ celle de rang <b>⌈3n/4⌉</b>. L'<b>écart interquartile</b> est Q₃ − Q₁.</p></div></details>
+<details class="course"><summary>▤ 2. Variance et écart type<span>+</span></summary><div><p class="formula">V = (1/n) Σ (xᵢ − x̄)² = (1/n) Σ xᵢ² − x̄² &nbsp;&nbsp; σ = √V</p>
+<p>L'écart type mesure la dispersion autour de la moyenne, dans la même unité que les données. Plus il est grand, plus les valeurs sont étalées. Deux séries peuvent avoir la même moyenne et des écarts types très différents.</p>
+<p class="trap"><b>Piège.</b> Un écart type ne peut pas être négatif, et il est nul seulement si toutes les valeurs sont égales.</p></div></details>
+<details class="course"><summary>▤ 3. Effet d’une transformation affine<span>+</span></summary><div><p>Si chaque valeur xᵢ devient axᵢ + b :</p>
+<p class="formula">moyenne : a·x̄ + b &nbsp;&nbsp; médiane : a·Me + b (si a &gt; 0) &nbsp;&nbsp; écart type : |a|·σ</p>
+<p>Ajouter b décale tout, ne change pas la dispersion. Multiplier par a étire la série. Exemple : des températures passées des °C aux °F (×1,8 + 32).</p></div></details>
+<details class="course"><summary>▤ 4. Boîte à moustaches<span>+</span></summary><div><p>On dessine une boîte de Q₁ à Q₃ coupée par la médiane, et des moustaches jusqu'au minimum et au maximum (ou jusqu'à d'autres bornes précisées dans l'énoncé).</p>
+<p>La boîte contient environ <b>50 %</b> des valeurs, chaque quart de la série est séparé par Q₁, Me, Q₃. On y lit d'un coup d'œil le centre, l'étalement, la symétrie et les valeurs extrêmes.</p></div></details>
+<details class="course"><summary>▤ 5. Choisir et comparer<span>+</span></summary><div><p>La <b>moyenne</b> et l'<b>écart type</b> sont sensibles aux valeurs extrêmes. La <b>médiane</b> et l'<b>écart interquartile</b> y résistent : on les préfère pour des revenus, des loyers, des durées avec quelques records.</p>
+<p>Pour comparer deux séries : comparer d'abord les centres (médianes ou moyennes), puis les dispersions (écart interquartile ou écart type), puis la forme (symétrique ou non). Une conclusion complète nomme les deux.</p></div></details>
+</section>
+
+<section id="ateliers"><div class="section-heading"><span>02 / MANIPULER</span><h2>Trois ateliers.</h2></div>
+<div id="lab1"></div><div id="lab2"></div><div id="lab3"></div></section>
+
+<section id="exercices"><div class="section-heading"><span>03 / S'ENTRAÎNER</span><h2>14 exercices corrigés.</h2></div>
+<p>Niveau ★ : réflexe. ★★ : application directe. ★★★ : raisonnement et rédaction.</p>
+<div id="exos"></div>
+<details class="panel"><summary>Ma checklist de révision <span>+</span></summary><div id="checklist" class="panel-body"></div></details></section>
+<footer><b>Fait pour Sanaa, avec confiance en sa réussite.</b><p>Statistiques · Première générale, spécialité mathématiques. Les ateliers illustrent, ils ne remplacent pas une démonstration.</p></footer>
+</main>
+<script src="../assets/fx.js"></script><script src="../assets/mini.js"></script><script src="content.js"></script><script src="app.js"></script><script src="/assets/nav.js"></script><script src="/assets/pwa.js"></script>
+</body></html>

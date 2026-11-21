@@ -433,6 +433,24 @@
     var t = el('text', { x: this.sx(x) + (o.dx || 8), y: this.sy(y) + (o.dy || -8), class: 'fx-label', fill: color || '#20283d' }, this.layerTop);
     t.textContent = txt; return t;
   };
+
+  // flèche (vecteur) de (x1,y1) vers (x2,y2)
+  Graph.prototype.arrow = function (x1, y1, x2, y2, color, o) {
+    o = o || {};
+    var g = this, X1 = g.sx(x1), Y1 = g.sy(y1), X2 = g.sx(x2), Y2 = g.sy(y2), L = Math.hypot(X2 - X1, Y2 - Y1), w = o.width || 2.4;
+    el('line', { x1: X1, y1: Y1, x2: X2, y2: Y2, stroke: color || '#3459e8', 'stroke-width': w, 'stroke-dasharray': o.dashed ? '6 5' : '' }, g.layerTop);
+    if (L < 6) return;
+    var ux = (X2 - X1) / L, uy = (Y2 - Y1) / L, hl = Math.min(14, L * 0.4), hw = hl * 0.5;
+    var bx = X2 - ux * hl, by = Y2 - uy * hl;
+    el('path', { d: 'M' + X2 + ' ' + Y2 + 'L' + (bx - uy * hw) + ' ' + (by + ux * hw) + 'L' + (bx + uy * hw) + ' ' + (by - ux * hw) + 'Z', fill: color || '#3459e8' }, g.layerTop);
+  };
+  // cercle de centre (cx,cy) et de rayon r (unités du repère)
+  Graph.prototype.circle = function (cx, cy, r, color, o) {
+    o = o || {};
+    var d = '', n = 120;
+    for (var i = 0; i <= n; i++) { var t = 2 * Math.PI * i / n; d += (i ? 'L' : 'M') + this.sx(cx + r * Math.cos(t)).toFixed(1) + ' ' + this.sy(cy + r * Math.sin(t)).toFixed(1); }
+    return el('path', { d: d + 'Z', fill: o.fill || 'none', 'fill-opacity': o.fill ? 0.1 : 0, stroke: color || '#3459e8', 'stroke-width': o.width || 2.4, 'stroke-dasharray': o.dashed ? '6 5' : '' }, this.layerCurves);
+  };
   Graph.prototype.rect = function (x1, x2, y1, y2, color, o) {
     o = o || {};
     return el('rect', { x: this.sx(x1), y: this.sy(Math.max(y1, y2)), width: Math.abs(this.sx(x2) - this.sx(x1)), height: Math.abs(this.sy(y1) - this.sy(y2)), fill: color || '#3459e8', opacity: o.opacity || 0.12 }, this.layerCurves);

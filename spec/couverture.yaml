@@ -80,3 +80,24 @@ couverture:
   P-ALG-SEC-05: {module: polynomes, niveau: complet}
   P-ALG-SEC-06: {module: polynomes, niveau: complet}
   P-ALG-SEC-07: {module: polynomes, niveau: complet}
+  # Géométrie
+  P-GEO-PSC-01: {module: produit-scalaire, niveau: complet}
+  P-GEO-PSC-02: {module: produit-scalaire, niveau: complet}
+  P-GEO-PSC-03: {module: produit-scalaire, niveau: complet}
+  P-GEO-PSC-04: {module: produit-scalaire, niveau: complet}
+  P-GEO-PSC-05: {module: produit-scalaire, niveau: partiel}
+  P-GEO-PSC-06: {module: droites-cercles, niveau: complet}
+  P-GEO-PSC-07: {module: droites-cercles, niveau: complet}
+  P-GEO-VEC-01: {module: droites-cercles, niveau: complet}
+  P-GEO-VEC-02: {module: droites-cercles, niveau: complet}
+  # Probabilités et statistiques
+  P-PRO-PRB-01: {module: probabilites, niveau: complet}
+  P-PRO-PRB-02: {module: probabilites, niveau: complet}
+  P-PRO-PRB-03: {module: probabilites, niveau: complet}
+  P-PRO-PRB-04: {module: probabilites, niveau: complet}
+  P-PRO-PRB-05: {module: variables-aleatoires, niveau: complet}
+  P-PRO-PRB-06: {module: variables-aleatoires, niveau: complet}
+  P-PRO-PRB-07: {module: variables-aleatoires, niveau: complet}
+  P-PRO-PRB-08: {module: variables-aleatoires, niveau: partiel}
+  P-PRO-STA-01: {module: statistiques, niveau: complet}
+  P-PRO-STA-02: {module: statistiques, niveau: complet}

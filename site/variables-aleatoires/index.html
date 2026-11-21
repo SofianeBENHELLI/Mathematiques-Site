@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Variables aléatoires : espérance, variance, loi binomiale | Les maths de Sanaa</title>
+<meta name="description" content="Loi, espérance, variance et écart type d’une variable aléatoire, linéarité, formule de König-Huygens, schéma de Bernoulli et loi binomiale : cours, ateliers interactifs et exercices corrigés pour la Première spécialité.">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/mini.css">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Maths Sanaa"><meta name="theme-color" content="#3459e8"></head>
+<body>
+<div class="dedication">Pour Sanaa <span>✦</span> résumer le hasard par une moyenne et une dispersion</div>
+<header><a class="brand" href="#essentiel">variables aléatoires<span>E(X)</span></a><span>LE LABO DE SANAA</span><button id="reset" type="button">↺ Réinitialiser</button></header>
+<div id="sitenav" data-current="variables-aleatoires"></div>
+<div class="navwrap"><strong id="sticky-formula">E(X) = Σ xᵢpᵢ &nbsp;·&nbsp; P(X = k) = C(n,k) pᵏ (1 − p)ⁿ⁻ᵏ</strong>
+<nav aria-label="Chapitres"><a href="#essentiel">Essentiel</a><a href="#ateliers">Ateliers</a><a href="#exercices">Exercices</a></nav></div>
+<main>
+<section class="hero"><div><p class="eyebrow">PREMIÈRE SPÉCIALITÉ · VARIABLES ALÉATOIRES</p>
+<h1>Résumer le hasard <em>par deux nombres.</em></h1>
+<p>Tu vas décrire une variable aléatoire par sa loi, calculer son espérance et sa variance, comprendre ce qu’elles disent, et reconnaître quand la loi binomiale s’applique.</p></div>
+<div class="hero-note"><span>TON PARCOURS</span><b>Loi → espérance → variance → Bernoulli → binomiale</b><p>Chaque idée a son atelier : manipule d'abord, retiens ensuite.</p></div></section>
+
+<section id="essentiel"><div class="section-heading"><span>01 / L'ESSENTIEL</span><h2>Cinq idées à posséder.</h2></div>
+<details class="course" open><summary>▤ 1. Loi d’une variable aléatoire discrète<span>+</span></summary><div><p>Une variable aléatoire X associe un nombre à chaque issue. Sa <b>loi</b> est la liste des probabilités P(X = xᵢ) = pᵢ. Elles sont positives et leur somme vaut <b>1</b>.</p>
+<p>Exemple : X = gain d'un jeu. Pour trouver une probabilité manquante, on utilise Σpᵢ = 1.</p></div></details>
+<details class="course"><summary>▤ 2. Espérance, variance, écart type<span>+</span></summary><div><p class="formula">E(X) = x₁p₁ + x₂p₂ + … &nbsp;&nbsp; V(X) = Σ pᵢ(xᵢ − E(X))² &nbsp;&nbsp; σ(X) = √V(X)</p>
+<p>L'<b>espérance</b> est la moyenne des valeurs pondérée par les probabilités : ce qu'on obtient « en moyenne » sur un grand nombre de répétitions. La <b>variance</b> mesure la dispersion autour de cette moyenne, l'<b>écart type</b> la ramène à l'unité de X.</p>
+<p>Pour un jeu : si E(gain net) = 0 le jeu est équitable, &gt; 0 favorable, &lt; 0 défavorable.</p></div></details>
+<details class="course"><summary>▤ 3. Linéarité et formule de König-Huygens<span>+</span></summary><div><p class="formula">E(aX + b) = aE(X) + b &nbsp;&nbsp; V(aX + b) = a²V(X) &nbsp;&nbsp; σ(aX + b) = |a|σ(X)<br>V(X) = E(X²) − (E(X))²</p>
+<p><b>Démonstration de E(aX + b).</b> Σ(axᵢ + b)pᵢ = aΣxᵢpᵢ + bΣpᵢ = aE(X) + b×1.</p>
+<p><b>Démonstration de König-Huygens.</b> V(X) = Σpᵢ(xᵢ − m)² = Σpᵢxᵢ² − 2mΣpᵢxᵢ + m²Σpᵢ = E(X²) − 2m² + m² = E(X²) − m².</p>
+<p>Ajouter une constante b décale la moyenne, ne change pas la dispersion. Multiplier par a multiplie l'écart type par |a|.</p></div></details>
+<details class="course"><summary>▤ 4. Épreuve de Bernoulli et schéma de Bernoulli<span>+</span></summary><div><p>Une <b>épreuve de Bernoulli</b> a deux issues : succès (probabilité p) et échec (probabilité 1 − p). Un <b>schéma de Bernoulli</b> répète n fois la même épreuve de façon <b>indépendante</b>.</p>
+<p>Sur l'arbre du schéma à 3 épreuves, la probabilité d'un chemin à k succès est pᵏ(1 − p)ⁿ⁻ᵏ. Il y a C(n,k) chemins à k succès, qu'on compte sur l'arbre ou avec la calculatrice.</p></div></details>
+<details class="course"><summary>▤ 5. Loi binomiale B(n ; p)<span>+</span></summary><div><p>X = nombre de succès dans un schéma de Bernoulli de n épreuves de paramètre p suit la loi binomiale B(n ; p).</p>
+<p class="formula">P(X = k) = C(n,k) pᵏ (1 − p)ⁿ⁻ᵏ &nbsp;&nbsp; E(X) = np &nbsp;&nbsp; V(X) = np(1 − p)</p>
+<p>Exemple : B(4 ; 0,5), P(X = 2) = 6 × 0,5⁴ = 0,375. Pour « au moins un succès » on passe par l'événement contraire : P(X ≥ 1) = 1 − P(X = 0) = 1 − (1 − p)ⁿ.</p>
+<p class="trap"><b>Piège.</b> Les épreuves doivent être <b>identiques et indépendantes</b> : tirer sans remise dans une petite urne ne donne pas une loi binomiale.</p></div></details>
+</section>
+
+<section id="ateliers"><div class="section-heading"><span>02 / MANIPULER</span><h2>Quatre ateliers.</h2></div>
+<div id="lab1"></div><div id="lab2"></div><div id="lab3"></div><div id="lab4"></div></section>
+
+<section id="exercices"><div class="section-heading"><span>03 / S'ENTRAÎNER</span><h2>16 exercices corrigés.</h2></div>
+<p>Niveau ★ : réflexe. ★★ : application directe. ★★★ : raisonnement et rédaction.</p>
+<div id="exos"></div>
+<details class="panel"><summary>Ma checklist de révision <span>+</span></summary><div id="checklist" class="panel-body"></div></details></section>
+<footer><b>Fait pour Sanaa, avec confiance en sa réussite.</b><p>Variables aléatoires · Première générale, spécialité mathématiques. Les ateliers illustrent, ils ne remplacent pas une démonstration.</p></footer>
+</main>
+<script src="../assets/fx.js"></script><script src="../assets/mini.js"></script><script src="content.js"></script><script src="app.js"></script><script src="/assets/nav.js"></script><script src="/assets/pwa.js"></script>
+</body></html>
