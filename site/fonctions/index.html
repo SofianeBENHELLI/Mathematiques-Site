@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fonctions : l'essentiel et les ateliers | Les maths de Sanaa</title>
+<meta name="description" content="Fonction, ensemble de définition, variations, continuité, théorème des valeurs intermédiaires : l'essentiel, des ateliers interactifs et des exercices corrigés pour la Première et la Terminale spécialité.">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/mini.css">
+</head>
+<body>
+<div class="dedication">Pour Sanaa <span>✦</span> comprendre une fonction, c'est comprendre tout le reste</div>
+<header><a class="brand" href="#essentiel">fonctions<span>f</span></a><span>LE LABO DE SANAA</span><button id="reset" type="button">↺ Réinitialiser</button></header>
+<div role="navigation" aria-label="Choisir un atelier" style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:12px 16px;background:#f5f7fb;border-bottom:1px solid #e5e9f2;font-size:14px">
+<a href="../#/home" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#294bd3;background:#e7edff">← Tous les chapitres</a>
+<a aria-current="page" href="./" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#294bd3;background:#e7edff">Fonctions</a>
+<a href="../derivation/" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#53617a;background:white">Dérivation</a>
+<a href="../polynomes/" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#53617a;background:white">Polynômes</a>
+<a href="../suites/" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#53617a;background:white">Suites</a>
+</div>
+<div class="navwrap"><strong id="sticky-formula">f : x ↦ f(x)</strong>
+<nav aria-label="Chapitres"><a href="#essentiel">Essentiel</a><a href="#ateliers">Ateliers</a><a href="#exercices">Exercices</a><a href="#methode">Méthode</a></nav></div>
+<main>
+<section class="hero"><div><p class="eyebrow">PREMIÈRE ET TERMINALE SPÉCIALITÉ · FONCTIONS</p>
+<h1>Une fonction, <em>c'est une règle.</em><br>Le reste en découle.</h1>
+<p>On revient à l'essentiel : ce qu'est une fonction, ce qu'on lit sur sa courbe, ce que veulent dire croissante, continue, et ce que permet le théorème des valeurs intermédiaires.</p></div>
+<div class="hero-note"><span>TON PARCOURS</span><b>Définition → lecture → continuité → TVI</b><p>Chaque notion a son atelier. Manipule d'abord, formule ensuite.</p></div></section>
+
+<section id="essentiel"><div class="section-heading"><span>01 / L'ESSENTIEL</span><h2>Cinq idées à posséder parfaitement.</h2></div>
+
+<details class="course" open><summary>▤ 1. Qu'est-ce qu'une fonction ?<span>+</span></summary><div>
+<p>Une fonction f associe à chaque nombre x d'un ensemble D <b>au plus un</b> nombre noté f(x). Pour un x donné, il n'y a jamais deux résultats.</p>
+<p class="formula">x ⟼ f(x) : x est la <b>variable</b>, f(x) est l'<b>image</b> de x.<br>Si f(a) = b, on dit que a est <b>un antécédent</b> de b.</p>
+<p>Un nombre a <b>une seule image</b> mais peut avoir <b>plusieurs antécédents</b> (ou aucun). Exemple : f(x) = x² : 9 a deux antécédents, 3 et −3, et −1 n'en a aucun.</p>
+<p><b>Ensemble de définition D :</b> l'ensemble des x pour lesquels f(x) existe. Trois interdits : diviser par 0, prendre la racine d'un négatif, prendre le logarithme d'un nombre négatif ou nul.</p>
+<p><b>Courbe représentative :</b> l'ensemble des points (x ; f(x)). Lire f(x) = k graphiquement, c'est compter les points de la courbe sur la droite horizontale y = k.</p></div></details>
+
+<details class="course"><summary>▤ 2. Sens de variation, extremums<span>+</span></summary><div>
+<p>f est <b>croissante</b> sur I si, pour tous a &lt; b de I, f(a) ≤ f(b). Elle est <b>décroissante</b> si f(a) ≥ f(b). Avec des inégalités strictes : <b>strictement</b> croissante ou décroissante.</p>
+<p>Un <b>maximum</b> (resp. minimum) sur I est la plus grande (resp. petite) valeur prise par f sur I. Un extremum <b>local</b> est un extremum sur un petit intervalle autour du point.</p>
+<p class="key">Un <b>tableau de variations</b> résume tout : domaine, flèches, valeurs aux extremums et aux bornes. C'est la carte d'identité d'une fonction.</p>
+<p class="trap"><b>Piège.</b> Deux valeurs f(a) &lt; f(b) ne prouvent pas que f est croissante entre a et b : la fonction peut redescendre entre les deux.</p></div></details>
+
+<details class="course"><summary>▤ 3. Continuité : le stylo qui ne se lève pas<span>+</span></summary><div>
+<p><b>Intuition :</b> f est continue sur un intervalle si on peut tracer sa courbe sans lever le stylo.</p>
+<p><b>Définition (Terminale) :</b> f est continue en a si f(x) tend vers f(a) quand x tend vers a. Il faut donc trois choses : f(a) existe, la limite en a existe (à gauche et à droite) et les deux sont égales.</p>
+<p class="formula">continue en a ⇔ lim<sub>x→a⁻</sub> f(x) = lim<sub>x→a⁺</sub> f(x) = f(a)</p>
+<p>Les fonctions de référence (polynômes, inverse, racine, exponentielle, ln, cos, sin) sont continues sur leur ensemble de définition. Sommes, produits, quotients (dénominateur non nul) et composées de fonctions continues le restent.</p>
+<p class="key">Dérivable en a ⇒ continue en a. <b>La réciproque est fausse</b> : |x| est continue en 0 sans y être dérivable.</p></div></details>
+
+<details class="course"><summary>▤ 4. Théorème des valeurs intermédiaires (TVI)<span>+</span></summary><div>
+<p class="formula"><b>TVI.</b> Si f est continue sur [a ; b], alors pour tout réel k compris entre f(a) et f(b), l'équation f(x) = k a au moins une solution dans [a ; b].</p>
+<p class="formula"><b>Corollaire (stricte monotonie).</b> Si de plus f est strictement monotone sur [a ; b], cette solution est <b>unique</b>.</p>
+<p>Rédaction type : « f est continue sur [a ; b] (justification), strictement croissante sur [a ; b], f(a) = … &lt; k &lt; … = f(b). D'après le corollaire du TVI, l'équation f(x) = k admet une unique solution α dans [a ; b]. »</p>
+<p class="trap"><b>Piège.</b> Citer le théorème sans vérifier ses hypothèses. Une fonction avec un saut peut passer de −1 à 1 sans jamais valoir 0 : l'atelier 5 le montre.</p></div></details>
+
+<details class="course"><summary>▤ 5. Résoudre une équation : méthodes<span>+</span></summary><div>
+<p><b>Exactement</b> quand on sait factoriser ou isoler (second degré, produit nul, exponentielle, logarithme). <b>Par encadrement</b> sinon : on prouve l'existence et l'unicité avec le TVI, puis on encadre par <b>dichotomie</b> : on coupe l'intervalle en deux et on garde la moitié où f change de signe.</p>
+<p>Après n étapes, l'amplitude de l'encadrement est (b − a)/2ⁿ.</p></div></details>
+</section>
+
+<section id="ateliers"><div class="section-heading"><span>02 / MANIPULER</span><h2>Cinq ateliers pour voir ce que disent les définitions.</h2></div>
+<div id="lab1"></div><div id="lab2"></div><div id="lab3"></div><div id="lab4"></div><div id="lab5"></div>
+</section>
+
+<section id="exercices"><div class="section-heading"><span>03 / S'ENTRAÎNER</span><h2>Seize exercices corrigés, du plus simple au plus fin.</h2></div>
+<p>Niveau ★ : réflexe. Niveau ★★ : application directe. Niveau ★★★ : rédaction et raisonnement. Chaque exercice a des indices progressifs, et la correction apparaît dès que tu as réussi ou quand tu la demandes.</p>
+<div id="exos"></div></section>
+
+<section id="methode"><div class="section-heading"><span>04 / MÉTHODE</span><h2>Ce qui fait la différence à l'examen.</h2></div>
+<div class="card"><h3>Étude d'une fonction : le réflexe en cinq lignes</h3>
+<ol><li>Domaine de définition, justifié.</li><li>Dérivabilité, puis f′ calculée en nommant la règle (u×v, u/v, composée).</li><li>f′ factorisée, signe justifié facteur par facteur.</li><li>Tableau de variations avec valeurs exactes.</li><li>Une phrase qui conclut en répondant à la question posée.</li></ol></div>
+<details class="course demo"><summary>▤ Démonstrations à savoir refaire<span>+</span></summary><div>
+<p><b>Dérivable ⇒ continue.</b> Si f est dérivable en a, alors f(a + h) − f(a) = h × (f(a + h) − f(a))/h. Quand h → 0, le quotient tend vers f′(a) et h vers 0, donc f(a + h) − f(a) → 0 : f est continue en a.</p>
+<p><b>Corollaire du TVI (unicité).</b> Si f est strictement croissante et f(α) = f(β) = k avec α &lt; β, alors f(α) &lt; f(β), contradiction. Donc au plus une solution.</p></div></details>
+<details class="panel"><summary>Ma checklist de révision <span>+</span></summary><div id="checklist" class="panel-body"></div></details>
+</section>
+<footer><b>Fait pour Sanaa, avec confiance en sa réussite.</b><p>Fonctions · Première et Terminale générale, spécialité mathématiques. Spécification des compétences : dossier spec/ du dépôt. Les ateliers illustrent, ils ne remplacent pas une démonstration.</p></footer>
+</main>
+<script src="../assets/fx.js"></script>
+<script src="../assets/mini.js"></script>
+<script src="content.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

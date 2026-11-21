@@ -47,3 +47,12 @@ Construit avec OpenAI Codex sur le Mac de l'utilisateur `sxz` :
 
 Le depot GitHub `SofianeBENHELLI/PolynomesSanaa` ne contient qu'une ancienne version (Parabole + Suites) et ne sert pas ce domaine.
 Site associe : https://science.benhelli.org
+
+## Spécification et tests
+
+- `spec/` : spécification des compétences Première et Terminale (voir `spec/README.md`).
+- `python3 scripts/validate_spec.py --report` : valide la spécification et affiche la couverture par chapitre.
+- `node tests/fx.test.mjs` : moteur mathématique (parseur, dérivation symbolique, comparaison d'expressions).
+- `node tests/content.test.mjs` : recalcule indépendamment les réponses des 35 exercices des mini-sites Fonctions et Dérivation.
+- `python3 tests/browser.py fonctions derivation` : chargement sans erreur, absence de débordement, ordinateur et mobile (Playwright).
+- `npm run manifest` après toute modification de `site/`, pour mettre à jour `manifest.json`.

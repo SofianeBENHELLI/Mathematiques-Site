@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dérivation : de la sécante à la tangente | Les maths de Sanaa</title>
+<meta name="description" content="Nombre dérivé, tangente, fonction dérivée, règles de calcul, variations, optimisation : l'essentiel, des ateliers interactifs, un entraîneur de dérivées et des exercices corrigés pour la Première spécialité.">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/mini.css">
+</head>
+<body>
+<div class="dedication">Pour Sanaa <span>✦</span> une pente, une tangente, et tout s'éclaire</div>
+<header><a class="brand" href="#essentiel">dérivation<span>f′</span></a><span>LE LABO DE SANAA</span><button id="reset" type="button">↺ Réinitialiser</button></header>
+<div role="navigation" aria-label="Choisir un atelier" style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:12px 16px;background:#f5f7fb;border-bottom:1px solid #e5e9f2;font-size:14px">
+<a href="../#/home" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#294bd3;background:#e7edff">← Tous les chapitres</a>
+<a href="../fonctions/" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#53617a;background:white">Fonctions</a>
+<a aria-current="page" href="./" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#294bd3;background:#e7edff">Dérivation</a>
+<a href="../polynomes/" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#53617a;background:white">Polynômes</a>
+<a href="../suites/" style="display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;color:#53617a;background:white">Suites</a>
+</div>
+<div class="navwrap"><strong id="sticky-formula">f′(a) = lim (f(a+h) − f(a))/h</strong>
+<nav aria-label="Chapitres"><a href="#essentiel">Essentiel</a><a href="#ateliers">Ateliers</a><a href="#entrainement">Dérive-moi</a><a href="#exercices">Exercices</a></nav></div>
+<main>
+<section class="hero"><div><p class="eyebrow">PREMIÈRE SPÉCIALITÉ · DÉRIVATION</p>
+<h1>Une dérivée, c'est <em>une pente</em><br>qu'on regarde de plus près.</h1>
+<p>Tu vas voir la sécante devenir tangente, relier le signe de f′ aux variations, et t'entraîner à dériver jusqu'à ce que ce soit un réflexe.</p></div>
+<div class="hero-note"><span>TON PARCOURS</span><b>Sécante → tangente → règles → variations → problèmes</b><p>Manipule d'abord. Les formules viennent ensuite, et elles auront un sens.</p></div></section>
+
+<section id="essentiel"><div class="section-heading"><span>01 / L'ESSENTIEL</span><h2>Sept idées, dans l'ordre où elles s'enchaînent.</h2></div>
+
+<details class="course" open><summary>▤ 1. Taux de variation : la pente entre deux points<span>+</span></summary><div>
+<p>Entre les points d'abscisses a et a + h de la courbe de f, la droite qui les relie (la <b>sécante</b>) a pour pente :</p>
+<p class="formula">taux de variation = (f(a + h) − f(a)) / h</p>
+<p>C'est une « vitesse moyenne » : variation de f divisée par variation de x.</p></div></details>
+
+<details class="course"><summary>▤ 2. Nombre dérivé : la pente quand h devient minuscule<span>+</span></summary><div>
+<p>Si le taux de variation se rapproche d'un nombre quand h tend vers 0, ce nombre est le <b>nombre dérivé</b> de f en a, noté f′(a). On dit alors que f est <b>dérivable</b> en a.</p>
+<p class="formula">f′(a) = lim<sub>h→0</sub> (f(a + h) − f(a)) / h</p>
+<p>Exemple : f(x) = x² en a = 3. (f(3 + h) − f(3))/h = (6h + h²)/h = 6 + h, qui tend vers 6. Donc f′(3) = 6.</p></div></details>
+
+<details class="course"><summary>▤ 3. Tangente : la droite qui épouse la courbe<span>+</span></summary><div>
+<p>La <b>tangente</b> en A(a ; f(a)) est la droite de pente f′(a) passant par A :</p>
+<p class="formula">y = f′(a)(x − a) + f(a)</p>
+<p class="trap"><b>Piège.</b> Ne pas oublier « + f(a) », et ne pas confondre f′(a), la pente, avec f(a), la hauteur du point.</p>
+<p><b>Approximation affine (nouveauté 2026).</b> Près de a, la courbe est presque sa tangente : f(a + h) ≈ f(a) + f′(a)·h. Exemple : √1,04 ≈ 1 + 0,5 × 0,04 = 1,02.</p></div></details>
+
+<details class="course"><summary>▤ 4. Fonction dérivée et règles de calcul<span>+</span></summary><div>
+<p>La <b>fonction dérivée</b> f′ associe à chaque x où f est dérivable le nombre f′(x).</p>
+<div class="table-scroll"><table><thead><tr><th>f(x)</th><th>f′(x)</th><th>Condition</th></tr></thead><tbody>
+<tr><td>k (constante)</td><td>0</td><td>ℝ</td></tr>
+<tr><td>x</td><td>1</td><td>ℝ</td></tr>
+<tr><td>xⁿ (n entier ≥ 1)</td><td>n·xⁿ⁻¹</td><td>ℝ</td></tr>
+<tr><td>1/x</td><td>−1/x²</td><td>x ≠ 0</td></tr>
+<tr><td>√x</td><td>1/(2√x)</td><td>x &gt; 0</td></tr>
+<tr><td>eˣ</td><td>eˣ</td><td>ℝ</td></tr>
+<tr><td>cos x</td><td>−sin x</td><td>ℝ</td></tr>
+<tr><td>sin x</td><td>cos x</td><td>ℝ</td></tr></tbody></table></div>
+<p class="formula">(u + v)′ = u′ + v′ &nbsp;&nbsp; (k·u)′ = k·u′<br>(u·v)′ = u′v + uv′<br>(u/v)′ = (u′v − uv′)/v² &nbsp;(v ≠ 0)<br>(g(ax + b))′ = a·g′(ax + b)  par exemple (e^(2x+1))′ = 2e^(2x+1)</p></div></details>
+
+<details class="course"><summary>▤ 5. Le signe de f′ donne les variations<span>+</span></summary><div>
+<p class="key">f′ &gt; 0 sur un intervalle ⇒ f strictement croissante. f′ &lt; 0 ⇒ f strictement décroissante. f′ = 0 partout ⇒ f constante.</p>
+<p><b>Extremum local.</b> Si f′ s'annule <b>en changeant de signe</b> en a, f a un extremum local en a. Si f′(a) = 0 sans changer de signe (x³ en 0), il n'y a pas d'extremum.</p>
+<p class="trap"><b>Piège.</b> Un tableau de signes de f′ n'a de valeur que si f′ est <b>factorisée</b>. Toujours factoriser avant de conclure.</p></div></details>
+
+<details class="course"><summary>▤ 6. Dérivable ou seulement continue ?<span>+</span></summary><div>
+<p>Dérivable en a ⇒ continue en a. <b>Pas l'inverse.</b> Une courbe qui a un « coin » en a (comme |x| en 0) est continue mais n'a pas de tangente : les pentes à gauche et à droite diffèrent. Une tangente verticale (√x en 0) correspond aussi à une non-dérivabilité. L'atelier du zoom le montre.</p></div></details>
+
+<details class="course demo"><summary>▤ 7. Démonstrations exigibles : refaire (x²)′ = 2x et (1/x)′ = −1/x²<span>+</span></summary><div>
+<p><b>Dérivée de x ↦ x² en a.</b> (f(a + h) − f(a))/h = ((a + h)² − a²)/h = (2ah + h²)/h = 2a + h → 2a. Donc f′(a) = 2a.</p>
+<p><b>Dérivée de x ↦ 1/x en a ≠ 0.</b> (1/(a + h) − 1/a)/h = ((a − (a + h))/(a(a + h)))/h = −h/(h·a(a + h)) = −1/(a(a + h)) → −1/a². Donc f′(a) = −1/a².</p></div></details>
+</section>
+
+<section id="ateliers"><div class="section-heading"><span>02 / MANIPULER</span><h2>Six ateliers, de la sécante à l'optimisation.</h2></div>
+<div id="lab1"></div><div id="lab2"></div><div id="lab3"></div><div id="lab4"></div><div id="lab5"></div><div id="lab6"></div>
+</section>
+
+<section id="entrainement"><div class="section-heading"><span>03 / RÉFLEXE</span><h2>Dérive-moi : un entraîneur sans fin.</h2></div>
+<p>Des fonctions tirées au hasard, quatre niveaux. Tape ta dérivée : toute forme équivalente est acceptée. Objectif : 10 bonnes réponses d'affilée au niveau 3.</p>
+<div id="trainer"></div></section>
+
+<section id="exercices"><div class="section-heading"><span>04 / S'ENTRAÎNER</span><h2>Dix-neuf exercices corrigés.</h2></div>
+<p>Niveau ★ : réflexe. Niveau ★★ : application directe. Niveau ★★★ : problème, rédaction et raisonnement.</p>
+<div id="exos"></div>
+<details class="panel"><summary>Ma checklist de révision <span>+</span></summary><div id="checklist" class="panel-body"></div></details>
+</section>
+<footer><b>Fait pour Sanaa, avec confiance en sa réussite.</b><p>Dérivation · Première générale, spécialité mathématiques. Spécification des compétences : dossier spec/ du dépôt. Les ateliers illustrent, ils ne remplacent pas une démonstration.</p></footer>
+</main>
+<script src="../assets/fx.js"></script>
+<script src="../assets/mini.js"></script>
+<script src="content.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
