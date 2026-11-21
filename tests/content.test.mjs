@@ -53,7 +53,7 @@ ok(Math.abs((f('x^2')(1.1) - f('x^2')(1)) / 0.1 - by(DER, 'd01').answer) < 1e-9,
 ok(Math.abs(FX.numDiff(f('x^2'), 3) - by(DER, 'd02').answer) < 1e-6, 'd02');
 ok(Math.abs(FX.numDiff(f('x^3'), 2) - by(DER, 'd03').answer) < 1e-4, 'd03');
 // expressions : réponse attendue = dérivée symbolique ET numérique de la fonction de l'énoncé
-const pairs = { d04: '5x^3-4x^2+7x-2', d05: '3sqrt(x)+2/x', d08: '(2x+1)(x^2-3)', d09: '(3x-1)/(x+2)', d10: '(3x+2)^4', d11: 'e^(2x+1)', d12: 'x*e^x' };
+const pairs = { d04: '5x^3-4x^2+7x-2', d05: '3sqrt(x)+2/x', d08: '(2x+1)(x^2-3)', d09: '(3x-1)/(x+2)', d10: '(3x+2)^4', d11: 'e^(2x+1)', d12: 'x*e^x', d23: '3x^3-5x^2+7x-4', d24: '(2x-5)(3x+1)', d25: '(x^2+1)/(x-2)', d27: '(3x+1)sqrt(x)', d28: '1/(2x+3)', d29: '5x^2-3x+7', d31: '1/x^3' };
 for (const [id, fs] of Object.entries(pairs)) {
   const ex = by(DER, id), g = f(fs), ans = f(ex.answer);
   ok(FX.equivalent(ans, FX.compile(FX.derive(fs)), { lo: ex.lo, hi: ex.hi }), `${id} symbolique`);
@@ -239,6 +239,19 @@ ok(by(EXP, 'e16').answer === 0 && Math.abs(FX.numDiff(f('e^x*e^(-x)'), 0.7)) < 1
   { const S = [6, 8, 9, 10, 11, 12], T = S.map(x => 2 * x + 5); ok(c(2 * mean(S) + 5, mean(T)) && c(2 * sd(S), sd(T)) && c(2 * 12 + 5, A('st08')) && c(2 * 3, A('st09')), 'st08-09'); }
   ok(c((12 * 2 + 15 * 3 + 9 * 5) / 10, A('st10')) && by(STA, 'st11').answer === 0, 'st10-11');
   ok(c(mean([1, 2, 2, 3, 100]), A('st12')) && by(STA, 'st13').answer === 0 && Math.ceil(37 / 4) === A('st14'), 'st12-14');
+}
+
+// Dérivation : exercices ajoutés d'après le cours (taux, tangente, approximation, coût marginal, Python)
+{ const g = f('x^2-3x+2'); ok(Math.abs((g(7) - g(4)) / 3 - by(DER, 'd20').answer) < 1e-12, 'd20'); }
+{ const g = f('x^2-2x+3'); ok(Math.abs((g(4) - g(1)) / 3 - by(DER, 'd21').answer) < 1e-12, 'd21'); }
+{ const g = f('x^2-4x+1'), t = f(by(DER, 'd22').answer); ok(Math.abs(t(3) - g(3)) < 1e-9 && Math.abs((t(4) - t(3)) - FX.numDiff(g, 3)) < 1e-5, 'd22'); }
+{ const ap = 1 + 0.06 / 2; ok(Math.abs(ap - by(DER, 'd26').answer) < 1e-12 && Math.abs(Math.sqrt(1.06) - ap) < 1e-3, 'd26'); }
+ok(by(DER, 'd30').answer === 1, 'd30');
+{ const C = f('0.5x^2+20x+100'); ok(Math.abs(FX.numDiff(C, 10) - by(DER, 'd32').answer) < 1e-4, 'd32'); }
+for (const ex of DER) {
+  if (!ex.py) continue;
+  const out = execFileSync('python3', ['-I', '-c', ex.py], { encoding: 'utf8' }).trim();
+  ok(Math.abs(parseFloat(out) - ex.answer) < 1e-9, `${ex.id}: Python affiche ${out}, réponse ${ex.answer}`);
 }
 
 // Python : on exécute réellement le code de chaque exercice

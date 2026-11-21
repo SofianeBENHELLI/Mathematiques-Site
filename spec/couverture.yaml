@@ -21,7 +21,7 @@ couverture:
   P-ANA-DER-05: {module: derivation, niveau: complet}
   P-ANA-DER-06: {module: derivation, niveau: complet}
   P-ANA-DER-07: {module: derivation, niveau: complet}
-  P-ANA-DER-08: {module: derivation, niveau: partiel}
+  P-ANA-DER-08: {module: derivation, niveau: complet}
   P-ANA-DER-09: {module: derivation, niveau: complet}
   P-ANA-DER-10: {module: derivation, niveau: complet}
   P-ANA-DER-11: {module: derivation, niveau: partiel}
@@ -30,6 +30,8 @@ couverture:
   P-ANA-DER-14: {module: derivation, niveau: complet}
   P-ANA-DER-15: {module: derivation, niveau: complet}
   P-ANA-DER-16: {module: derivation, niveau: partiel}
+  P-ANA-DER-17: {module: derivation, niveau: complet}
+  P-ANA-DER-18: {module: derivation, niveau: complet}
   # Terminale, préparation : continuité, TVI, convexité
   T-ANA-CON-01: {module: fonctions, niveau: complet}
   T-ANA-CON-02: {module: fonctions, niveau: complet}
