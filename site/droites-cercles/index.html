@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Droites et cercles : équations, vecteurs normaux, tangentes | Les maths de Sanaa</title>
+<meta name="description" content="Équation réduite et cartésienne d’une droite, vecteurs directeur et normal, colinéarité, intersection, équation d’un cercle et tangente : cours, ateliers interactifs et exercices corrigés pour la Première spécialité.">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/mini.css">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Maths Sanaa"><meta name="theme-color" content="#3459e8"></head>
+<body>
+<div class="dedication">Pour Sanaa <span>✦</span> une équation décrit une forme</div>
+<header><a class="brand" href="#essentiel">droites et cercles<span>ax+by</span></a><span>LE LABO DE SANAA</span><button id="reset" type="button">↺ Réinitialiser</button></header>
+<div id="sitenav" data-current="droites-cercles"></div>
+<div class="navwrap"><strong id="sticky-formula">ax + by + c = 0 &nbsp;·&nbsp; (x − p)² + (y − q)² = r²</strong>
+<nav aria-label="Chapitres"><a href="#essentiel">Essentiel</a><a href="#ateliers">Ateliers</a><a href="#exercices">Exercices</a></nav></div>
+<main>
+<section class="hero"><div><p class="eyebrow">PREMIÈRE SPÉCIALITÉ · GÉOMÉTRIE REPÉRÉE</p>
+<h1>Une équation, <em>une droite ou un cercle.</em></h1>
+<p>Tu vas passer sans hésiter d’une droite à son équation et inversement, trouver intersections et tangentes, et utiliser le vecteur normal pour tout ramener à un produit scalaire.</p></div>
+<div class="hero-note"><span>TON PARCOURS</span><b>Droite → vecteurs → intersection → cercle → tangente</b><p>Chaque idée a son atelier : manipule d'abord, retiens ensuite.</p></div></section>
+
+<section id="essentiel"><div class="section-heading"><span>01 / L'ESSENTIEL</span><h2>Cinq idées à posséder.</h2></div>
+<details class="course" open><summary>▤ 1. Équations d’une droite<span>+</span></summary><div><p class="formula">Réduite : y = mx + p (m = pente, p = ordonnée à l'origine)<br>Cartésienne : ax + by + c = 0 avec (a ; b) ≠ (0 ; 0)<br>Verticale : x = k</p>
+<p>La pente passant par A(xA ; yA) et B(xB ; yB) est m = (yB − yA)/(xB − xA) si xA ≠ xB. On trouve p en remplaçant un point.</p>
+<p>Un vecteur directeur de ax + by + c = 0 est <b>u(−b ; a)</b>. Un vecteur normal est <b>n(a ; b)</b>. Ils sont orthogonaux : (−b)a + a·b = 0.</p></div></details>
+<details class="course"><summary>▤ 2. Colinéarité, parallélisme, alignement<span>+</span></summary><div><p class="formula">u(x ; y) et v(x′ ; y′) colinéaires ⇔ xy′ − x′y = 0</p>
+<p>Trois points A, B, C sont <b>alignés</b> si AB et AC sont colinéaires. Deux droites sont <b>parallèles</b> si leurs vecteurs directeurs sont colinéaires (même pente).</p>
+<p>Pour trouver le point d'intersection de deux droites sécantes, on résout le <b>système</b> formé par leurs deux équations. Sans solution : parallèles distinctes. Une infinité : droites confondues.</p></div></details>
+<details class="course"><summary>▤ 3. Droite définie par un vecteur normal<span>+</span></summary><div><p>La droite passant par A et de vecteur normal n(a ; b) est l'ensemble des points M tels que <b>AM·n = 0</b>. En coordonnées : a(x − xA) + b(y − yA) = 0, soit ax + by + c = 0 avec c = −(a·xA + b·yA).</p>
+<p>Exemple : A(2 ; 1), n(3 ; 4) donne 3(x − 2) + 4(y − 1) = 0, soit 3x + 4y − 10 = 0.</p>
+<p>Une parallèle à ax + by + c = 0 garde les mêmes a et b, seul c change. Une perpendiculaire a pour normal le vecteur directeur de l'autre.</p></div></details>
+<details class="course"><summary>▤ 4. Équation d’un cercle<span>+</span></summary><div><p>Le cercle de centre Ω(p ; q) et de rayon r est l'ensemble des points M tels que ΩM = r :</p>
+<p class="formula">(x − p)² + (y − q)² = r² &nbsp;&nbsp; soit &nbsp;&nbsp; x² + y² − 2px − 2qy + (p² + q² − r²) = 0</p>
+<p>Réciproquement, pour reconnaître x² + y² + ux + vy + w = 0, on écrit la forme canonique : (x + u/2)² + (y + v/2)² = u²/4 + v²/4 − w. Si le second membre est positif : cercle ; nul : un point ; négatif : ensemble vide.</p>
+<p class="trap"><b>Piège.</b> Le centre a des coordonnées opposées à celles de la parenthèse : (x + 1)² donne p = −1.</p></div></details>
+<details class="course"><summary>▤ 5. Tangente et position relative<span>+</span></summary><div><p>Une droite d et un cercle de centre Ω et de rayon r : soit δ la distance de Ω à d. Si δ &lt; r : deux points communs ; δ = r : tangente (un point) ; δ &gt; r : aucun point.</p>
+<p>La <b>tangente au cercle en un point A</b> du cercle est la droite passant par A et de vecteur normal ΩA : c'est l'ensemble des M tels que ΩA·AM = 0.</p>
+<p>Distance d'un point P(x₀ ; y₀) à la droite ax + by + c = 0 : δ = |ax₀ + by₀ + c|/√(a² + b²).</p>
+<p><b>Ensembles de points.</b> MA·u = k est une droite de vecteur normal u. MA·MB = 0 est le cercle de diamètre [AB].</p></div></details>
+</section>
+
+<section id="ateliers"><div class="section-heading"><span>02 / MANIPULER</span><h2>Cinq ateliers.</h2></div>
+<div id="lab1"></div><div id="lab2"></div><div id="lab3"></div><div id="lab4"></div><div id="lab5"></div></section>
+
+<section id="exercices"><div class="section-heading"><span>03 / S'ENTRAÎNER</span><h2>16 exercices corrigés.</h2></div>
+<p>Niveau ★ : réflexe. ★★ : application directe. ★★★ : raisonnement et rédaction.</p>
+<div id="exos"></div>
+<details class="panel"><summary>Ma checklist de révision <span>+</span></summary><div id="checklist" class="panel-body"></div></details></section>
+<footer><b>Fait pour Sanaa, avec confiance en sa réussite.</b><p>Droites et cercles · Première générale, spécialité mathématiques. Les ateliers illustrent, ils ne remplacent pas une démonstration.</p></footer>
+</main>
+<script src="../assets/fx.js"></script><script src="../assets/mini.js"></script><script src="content.js"></script><script src="app.js"></script><script src="/assets/nav.js"></script><script src="/assets/pwa.js"></script>
+</body></html>

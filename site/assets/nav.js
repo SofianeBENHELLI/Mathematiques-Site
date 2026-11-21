@@ -6,8 +6,13 @@
     ['/derivation/', 'Dérivation', 'derivation'],
     ['/exponentielle/', 'Exponentielle', 'exponentielle'],
     ['/trigonometrie/', 'Trigonométrie', 'trigonometrie'],
-    ['/polynomes/', 'Polynômes', 'polynomes'],
+    ['/polynomes/', 'Second degré', 'polynomes'],
     ['/suites/', 'Suites', 'suites'],
+    ['/produit-scalaire/', 'Produit scalaire', 'produit-scalaire'],
+    ['/droites-cercles/', 'Droites et cercles', 'droites-cercles'],
+    ['/probabilites/', 'Probabilités', 'probabilites'],
+    ['/variables-aleatoires/', 'Variables aléatoires', 'variables-aleatoires'],
+    ['/statistiques/', 'Statistiques', 'statistiques'],
     ['/#/bac-blanc', '◷ Bac blanc', 'bac'],
     ['https://science.benhelli.org/', 'Sciences ↗', 'sciences']
   ];
