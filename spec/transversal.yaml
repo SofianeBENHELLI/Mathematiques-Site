@@ -1,0 +1,34 @@
+# Compétences transversales, conventions de rédaction et automatismes.
+# Source : préambules des programmes de spécialité (six compétences mathématiques),
+# liste d'automatismes du programme de Première 2026 (section "Automatismes").
+statut: confirme_premiere_2026
+
+competences_mathematiques:
+  - {id: X-CHE, nom: "Chercher", txt: "Expérimenter, conjecturer, tester sur des cas particuliers, changer de point de vue"}
+  - {id: X-MOD, nom: "Modéliser", txt: "Traduire une situation en objets mathématiques, choisir un modèle, interpréter le résultat"}
+  - {id: X-REP, nom: "Représenter", txt: "Passer d'un registre à l'autre : langue, algébrique, graphique, numérique, tableau"}
+  - {id: X-RAI, nom: "Raisonner, démontrer", txt: "Enchaîner des étapes justifiées, distinguer conjecture, propriété et démonstration"}
+  - {id: X-CAL, nom: "Calculer", txt: "Appliquer des techniques, contrôler un résultat, utiliser des outils"}
+  - {id: X-COM, nom: "Communiquer", txt: "Rédiger clairement, à l'écrit comme à l'oral"}
+
+automatismes_premiere:
+  - {id: P-AUT-01, domaine: "Évolutions et variations", txt: "Appliquer un taux d'évolution, calculer un taux en pourcentage, composer des évolutions successives, calculer un taux réciproque"}
+  - {id: P-AUT-02, domaine: "Calcul numérique et algébrique", txt: "Résoudre une équation produit nul"}
+  - {id: P-AUT-03, domaine: "Calcul numérique et algébrique", txt: "Déterminer le signe d'expressions du premier degré et du second degré factorisées"}
+  - {id: P-AUT-04, domaine: "Calcul numérique et algébrique", txt: "Développer, factoriser et réduire une expression"}
+  - {id: P-AUT-05, domaine: "Fonctions et représentations", txt: "Résoudre graphiquement f(x) = k ou f(x) < k"}
+  - {id: P-AUT-06, domaine: "Fonctions et représentations", txt: "Lire le signe ou les variations d'une fonction sur un graphique"}
+  - {id: P-AUT-07, domaine: "Fonctions et représentations", txt: "Tracer une droite, lire ou calculer son coefficient directeur"}
+  - {id: P-AUT-08, domaine: "Statistiques", txt: "Lire et construire des représentations, passer du graphique aux données, calculer et interpréter des indicateurs"}
+  - {id: P-AUT-09, domaine: "Probabilités", txt: "Calculer des probabilités conditionnelles depuis un tableau croisé ou un arbre ; distinguer P(A ∩ B), P_A(B) et P_B(A)"}
+  - {id: P-AUT-10, domaine: "Transition 2026", txt: "Identités remarquables, résolution d'inéquations, comparaison de distributions (boîtes à moustaches), décalées de la Seconde vers la Première"}
+
+redaction:
+  # Conventions à tenir sur chaque copie. Elles servent de grille d'auto-évaluation.
+  - {id: X-RED-01, txt: "Annoncer ce qu'on fait : « Pour tout x de ..., on a ... »"}
+  - {id: X-RED-02, txt: "Écrire le domaine d'étude avant de dériver ou de résoudre"}
+  - {id: X-RED-03, txt: "Citer la propriété ou le théorème utilisé et vérifier ses hypothèses (continuité, dérivabilité, monotonie stricte pour le TVI)"}
+  - {id: X-RED-04, txt: "Justifier chaque signe : un tableau de signes ne remplace pas une phrase"}
+  - {id: X-RED-05, txt: "Conclure par une phrase qui répond à la question posée, avec l'unité si besoin"}
+  - {id: X-RED-06, txt: "Contrôler le résultat : ordre de grandeur, cas simple, cohérence avec le graphique"}
+  - {id: X-RED-07, txt: "Distinguer valeur exacte et valeur approchée, et arrondir seulement à la fin"}

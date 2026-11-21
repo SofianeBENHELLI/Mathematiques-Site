@@ -1,0 +1,92 @@
+# Programme de spécialité mathématiques, Terminale générale.
+# STATUT PROVISOIRE : reprend le programme de 2019 (encore en vigueur en 2026-2027).
+# Le nouveau programme (BO n° 14 du 2 avril 2026, NOR MENE2602919A), applicable à Sanaa
+# en 2027-2028, n'a pas pu être lu. A reconcilier ligne à ligne. Voir sources.md.
+niveau: terminale
+statut: provisoire
+domaines:
+
+  - id: ANA
+    nom: "Analyse"
+    chapitres:
+      - id: SUI
+        nom: "Suites et limites"
+        competences:
+          - {id: T-ANA-SUI-01, type: connaissance, txt: "Raisonnement par récurrence : initialisation, hérédité, conclusion"}
+          - {id: T-ANA-SUI-02, type: connaissance, txt: "Limite finie ou infinie d'une suite ; suite convergente, divergente"}
+          - {id: T-ANA-SUI-03, type: capacite, txt: "Limites par opérations, formes indéterminées, comparaison, théorème des gendarmes"}
+          - {id: T-ANA-SUI-04, type: connaissance, txt: "Limite de q^n selon q ; suite croissante majorée converge"}
+          - {id: T-ANA-SUI-05, type: demonstration, txt: "Démontrer qu'une suite croissante non majorée tend vers +∞, et la limite de q^n pour q > 1"}
+          - {id: T-ANA-SUI-06, type: capacite, txt: "Étudier une suite définie par u_(n+1) = f(u_n) : monotonie, bornes, convergence, limite point fixe"}
+      - id: LIM
+        nom: "Limites de fonctions"
+        competences:
+          - {id: T-ANA-LIM-01, type: connaissance, txt: "Limites en ±∞ et en un point ; asymptotes horizontale, verticale"}
+          - {id: T-ANA-LIM-02, type: capacite, txt: "Calculer des limites : opérations, factorisation du terme dominant, quantité conjuguée, composition"}
+          - {id: T-ANA-LIM-03, type: connaissance, txt: "Croissances comparées : e^x/x^n → +∞, x^n e^(-x) → 0"}
+          - {id: T-ANA-LIM-04, type: capacite, txt: "Théorèmes de comparaison et des gendarmes pour les fonctions"}
+      - id: CON
+        nom: "Continuité"
+        competences:
+          - {id: T-ANA-CON-01, type: connaissance, txt: "Continuité en un point et sur un intervalle ; toute fonction dérivable est continue", piege: "La réciproque est fausse : |x| est continue en 0 sans y être dérivable"}
+          - {id: T-ANA-CON-02, type: connaissance, txt: "Théorème des valeurs intermédiaires ; version avec stricte monotonie (solution unique)"}
+          - {id: T-ANA-CON-03, type: capacite, txt: "Appliquer le TVI en vérifiant continuité, stricte monotonie et signes aux bornes, puis conclure sur l'unicité", piege: "Citer le théorème sans vérifier ses hypothèses"}
+          - {id: T-ANA-CON-04, type: algorithme, txt: "Encadrer une solution par dichotomie (algorithme et programme Python)"}
+      - id: DER
+        nom: "Dérivation, convexité"
+        competences:
+          - {id: T-ANA-DER-01, type: capacite, txt: "Dériver une composée : (u ∘ v)' = v' × u'(v) ; cas e^u, u^n, √u, 1/u"}
+          - {id: T-ANA-DER-02, type: connaissance, txt: "Dérivée seconde, fonction convexe, concave, point d'inflexion"}
+          - {id: T-ANA-DER-03, type: capacite, txt: "Étudier la convexité par le signe de f'', déterminer les points d'inflexion"}
+          - {id: T-ANA-DER-04, type: capacite, txt: "Utiliser la convexité : position de la courbe par rapport à ses tangentes, inégalités"}
+          - {id: T-ANA-DER-05, type: capacite, txt: "Étude complète d'une fonction : domaine, limites, dérivée, variations, asymptotes, convexité, courbe"}
+          - {id: T-ANA-DER-06, type: capacite, txt: "Résoudre un problème d'optimisation avec modélisation et justification"}
+      - id: LOG
+        nom: "Logarithme népérien"
+        competences:
+          - {id: T-ANA-LOG-01, type: connaissance, txt: "ln : réciproque de exp, ensemble de définition ]0 ; +∞[, courbe, variations, dérivée 1/x"}
+          - {id: T-ANA-LOG-02, type: connaissance, txt: "ln(ab) = ln a + ln b, ln(1/a), ln(a/b), ln(a^n)"}
+          - {id: T-ANA-LOG-03, type: demonstration, txt: "Démontrer ln(ab) = ln a + ln b"}
+          - {id: T-ANA-LOG-04, type: capacite, txt: "Résoudre équations et inéquations avec ln, en précisant le domaine"}
+          - {id: T-ANA-LOG-05, type: connaissance, txt: "Limites : ln x → +∞, ln x/x → 0, x ln x → 0, ln(1 + x)/x → 1"}
+          - {id: T-ANA-LOG-06, type: capacite, txt: "Étudier une fonction avec ln et dériver ln(u)"}
+      - id: TRI
+        nom: "Trigonométrie"
+        competences:
+          - {id: T-ANA-TRI-01, type: capacite, txt: "Dérivées et variations de cos et sin ; dérivée de cos(ax + b), sin(ax + b) ; limite de sin x / x"}
+      - id: PRI
+        nom: "Primitives et équations différentielles"
+        competences:
+          - {id: T-ANA-PRI-01, type: capacite, txt: "Primitives usuelles et d'expressions de la forme u'u^n, u'/u, u'e^u"}
+          - {id: T-ANA-PRI-02, type: capacite, txt: "Résoudre y' = ay, y' = ay + b, y' = ay + f ; déterminer la solution par condition initiale"}
+      - id: INT
+        nom: "Calcul intégral"
+        competences:
+          - {id: T-ANA-INT-01, type: connaissance, txt: "Intégrale d'une fonction continue ; lien avec les primitives ; aire sous la courbe"}
+          - {id: T-ANA-INT-02, type: capacite, txt: "Calculer une intégrale par primitive, linéarité, Chasles, positivité, croissance"}
+          - {id: T-ANA-INT-03, type: capacite, txt: "Intégration par parties"}
+          - {id: T-ANA-INT-04, type: capacite, txt: "Aire entre deux courbes, valeur moyenne"}
+          - {id: T-ANA-INT-05, type: demonstration, txt: "Démontrer que la fonction x ↦ ∫ de a à x de f(t) dt est une primitive de f"}
+
+  - id: ALG
+    nom: "Algèbre et géométrie"
+    chapitres:
+      - id: DEN
+        nom: "Dénombrement"
+        competences:
+          - {id: T-ALG-DEN-01, type: capacite, txt: "Principe multiplicatif, arrangements, permutations, combinaisons, triangle de Pascal"}
+      - id: ESP
+        nom: "Géométrie dans l'espace"
+        competences:
+          - {id: T-ALG-ESP-01, type: capacite, txt: "Vecteurs, droites, plans de l'espace ; représentations paramétriques ; équation cartésienne de plan"}
+          - {id: T-ALG-ESP-02, type: capacite, txt: "Orthogonalité, produit scalaire dans l'espace, distance d'un point à un plan"}
+
+  - id: PRO
+    nom: "Probabilités"
+    chapitres:
+      - id: BIN
+        nom: "Probabilités conditionnelles, loi binomiale, concentration"
+        competences:
+          - {id: T-PRO-BIN-01, type: capacite, txt: "Partition de l'univers, formule des probabilités totales, arbres pondérés"}
+          - {id: T-PRO-BIN-02, type: capacite, txt: "Loi binomiale : coefficients binomiaux, P(X = k), espérance et variance, intervalle de fluctuation"}
+          - {id: T-PRO-BIN-03, type: capacite, txt: "Somme de variables aléatoires, espérance, variance, inégalités de Bienaymé-Tchebychev et de concentration, loi des grands nombres"}
