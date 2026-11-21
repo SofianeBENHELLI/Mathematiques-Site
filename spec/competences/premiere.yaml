@@ -55,8 +55,8 @@ domaines:
           - {id: P-ANA-DER-04, type: capacite, txt: "Calculer un nombre dérivé à partir de la définition, pour des fonctions simples (carré, inverse)", note: "2026"}
           - {id: P-ANA-DER-05, type: capacite, txt: "Lire graphiquement un nombre dérivé et construire une tangente"}
           - {id: P-ANA-DER-06, type: capacite, txt: "Approximation affine : f(a + h) ≈ f(a) + f'(a) h pour h proche de 0, et calcul d'une valeur approchée", note: "2026"}
-          - {id: P-ANA-DER-07, type: connaissance, txt: "Fonction dérivée de x ↦ x², x ↦ x^n, x ↦ 1/x, x ↦ √x, constante, x ↦ x"}
-          - {id: P-ANA-DER-08, type: demonstration, txt: "Démontrer, à partir de la définition, la dérivée de la fonction carré et de la fonction inverse", note: "2026"}
+          - {id: P-ANA-DER-07, type: connaissance, txt: "Fonction dérivée de x ↦ x², x ↦ x³, x ↦ x^n (n entier relatif), x ↦ 1/x, x ↦ √x, constante, x ↦ x ; domaine de dérivabilité"}
+          - {id: P-ANA-DER-08, type: demonstration, txt: "Démontrer : équation de la tangente, dérivée de la fonction carré et de la fonction inverse, √x non dérivable en 0, dérivée d'un produit", note: "2026"}
           - {id: P-ANA-DER-09, type: connaissance, txt: "Dérivée d'une somme, d'un produit par un réel, d'un produit uv, d'un quotient u/v, d'une puissance"}
           - {id: P-ANA-DER-10, type: capacite, txt: "Dériver x ↦ g(ax + b) à partir de la dérivée de g", note: "2026"}
           - {id: P-ANA-DER-11, type: capacite, txt: "Calculer la dérivée d'un produit ou d'un quotient et la simplifier jusqu'à une forme factorisée exploitable", piege: "Une dérivée non factorisée ne permet pas d'étudier son signe"}
@@ -65,6 +65,8 @@ domaines:
           - {id: P-ANA-DER-14, type: capacite, txt: "Déterminer les extremums d'une fonction et résoudre un problème d'optimisation"}
           - {id: P-ANA-DER-15, type: capacite, txt: "Exploiter le tableau de variations : nombre de solutions de f(x) = k, comparaison, encadrement, inégalité"}
           - {id: P-ANA-DER-16, type: capacite, txt: "Déterminer une fonction à partir de conditions sur f, f' ou une tangente (système sur les coefficients)"}
+          - {id: P-ANA-DER-17, type: capacite, txt: "Interpréter le nombre dérivé dans un contexte : vitesse instantanée, coût marginal, pente d'une tangente lue sur un graphique"}
+          - {id: P-ANA-DER-18, type: algorithme, txt: "Programmer la liste des coefficients directeurs des sécantes pour un pas donné et observer leur limite"}
       - id: EXP
         nom: "Exponentielle"
         competences:
