@@ -1,0 +1,47 @@
+# Où le site travaille chaque compétence.
+# niveau : complet (cours + exercices + atelier), partiel (cours ou exercices), aucun (pas encore couvert)
+# module : dossier ou identifiant du site. "fonctions" et "derivation" sont les deux nouveaux mini-sites.
+# Les compétences absentes de ce fichier sont considérées non couvertes.
+# Les niveaux sont évalués à la main : complet = cours + atelier + exercices corrigés, partiel = au moins un des trois.
+# Non couvert à ce jour : convexité (T-ANA-DER-02 à 04), comparaison de deux courbes (P-ANA-FON-06).
+couverture:
+  # Fonctions : généralités
+  P-ANA-FON-01: {module: fonctions, niveau: complet}
+  P-ANA-FON-02: {module: fonctions, niveau: complet}
+  P-ANA-FON-03: {module: fonctions, niveau: complet}
+  P-ANA-FON-04: {module: fonctions, niveau: complet}
+  P-ANA-FON-05: {module: fonctions, niveau: partiel}
+  P-ANA-FON-07: {module: fonctions, niveau: partiel}
+  P-ANA-FON-08: {module: fonctions, niveau: partiel}
+  # Dérivation
+  P-ANA-DER-01: {module: derivation, niveau: complet}
+  P-ANA-DER-02: {module: derivation, niveau: complet}
+  P-ANA-DER-03: {module: derivation, niveau: complet}
+  P-ANA-DER-04: {module: derivation, niveau: complet}
+  P-ANA-DER-05: {module: derivation, niveau: complet}
+  P-ANA-DER-06: {module: derivation, niveau: complet}
+  P-ANA-DER-07: {module: derivation, niveau: complet}
+  P-ANA-DER-08: {module: derivation, niveau: partiel}
+  P-ANA-DER-09: {module: derivation, niveau: complet}
+  P-ANA-DER-10: {module: derivation, niveau: complet}
+  P-ANA-DER-11: {module: derivation, niveau: partiel}
+  P-ANA-DER-12: {module: derivation, niveau: complet}
+  P-ANA-DER-13: {module: derivation, niveau: complet}
+  P-ANA-DER-14: {module: derivation, niveau: complet}
+  P-ANA-DER-15: {module: derivation, niveau: complet}
+  P-ANA-DER-16: {module: derivation, niveau: partiel}
+  # Terminale, préparation : continuité, TVI, convexité
+  T-ANA-CON-01: {module: fonctions, niveau: complet}
+  T-ANA-CON-02: {module: fonctions, niveau: complet}
+  T-ANA-CON-03: {module: fonctions, niveau: complet}
+  T-ANA-CON-04: {module: fonctions, niveau: complet}
+  # Déjà couverts par les modules existants
+  P-ALG-SEC-01: {module: polynomes, niveau: complet}
+  P-ALG-SEC-02: {module: polynomes, niveau: complet}
+  P-ALG-SEC-03: {module: polynomes, niveau: complet}
+  P-ALG-SEC-04: {module: polynomes, niveau: complet}
+  P-ALG-SEC-05: {module: polynomes, niveau: complet}
+  P-ALG-SUI-03: {module: suites, niveau: complet}
+  P-ALG-SUI-04: {module: suites, niveau: complet}
+  P-ALG-SUI-07: {module: suites, niveau: complet}
+  P-ANA-EXP-05: {module: derivation, niveau: partiel}
