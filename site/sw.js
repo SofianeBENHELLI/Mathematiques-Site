@@ -1,5 +1,5 @@
 /* Service worker généré par scripts/build-pwa.mjs : ne pas modifier sw.js à la main. */
-const VERSION = "631aa3e8f29b";
+const VERSION = "3f7944a9e32a";
 const CACHE = "maths-sanaa-" + VERSION;
 const ASSETS = [
  "/",
