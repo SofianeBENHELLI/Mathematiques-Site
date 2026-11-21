@@ -1,18 +1,175 @@
-const $=id=>document.getElementById(id),fmt=x=>!Number.isFinite(x)?'hors précision':new Intl.NumberFormat('fr-FR',{maximumFractionDigits:5,notation:Math.abs(x)>=1e8?'scientific':'standard'}).format(Object.is(x,-0)?0:x);
-const defaults={arith:{u:2,r:3},geo:{u:3,q:1.2},quad:{a:1,b:-4,c:3},inverse:{L:2,A:8},affine:{u:10,q:.8,d:3}};
-let state={kind:'arith',...defaults.arith},N=15,selected=4;
-const defs={arith:[['u','Premier terme u₀',-20,20,.5],['r','Raison r',-5,5,.1]],geo:[['u','Premier terme u₀',-20,20,.5],['q','Raison q',-2,2,.05]],quad:[['a','Coefficient a',-3,3,.1],['b','Coefficient b',-10,10,.5],['c','Constante c',-10,10,.5]],inverse:[['L','Valeur L',-10,10,.5],['A','Coefficient A',-20,20,.5]],affine:[['u','Premier terme u₀',-20,20,.5],['q','Multiplicateur q',-2,2,.05],['d','Ajout d',-10,10,.5]]};
-function rule(s=state){if(s.kind==='arith')return `uₙ = ${fmt(s.u)} + n × (${fmt(s.r)})`;if(s.kind==='geo')return `uₙ = ${fmt(s.u)} × (${fmt(s.q)})ⁿ`;if(s.kind==='quad')return `uₙ = (${fmt(s.a)})n² + (${fmt(s.b)})n + (${fmt(s.c)})`;if(s.kind==='inverse')return `uₙ = ${fmt(s.L)} + (${fmt(s.A)})/(n + 1)`;return `u₀ = ${fmt(s.u)} ; uₙ₊₁ = (${fmt(s.q)})uₙ + (${fmt(s.d)})`;}
-function recurrence(){if(state.kind==='arith')return `u₀ = ${fmt(state.u)} ; uₙ₊₁ = uₙ + (${fmt(state.r)})`;if(state.kind==='geo')return `u₀ = ${fmt(state.u)} ; uₙ₊₁ = (${fmt(state.q)})uₙ`;return ''}
-function controls(){ $('parameters').innerHTML=defs[state.kind].map(([key,label,min,max,step])=>`<div class="param"><div class="param-top"><label for="p-${key}">${label}</label><input id="p-${key}" data-key="${key}" type="number" min="-10000" max="10000" step="any" value="${state[key]}"></div><input aria-label="${label}, curseur" data-key="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${state[key]}"></div>`).join('');$('parameters').querySelectorAll('input[type=range]').forEach(e=>{e.min=Math.min(+e.min,state[e.dataset.key]);e.max=Math.max(+e.max,state[e.dataset.key]);e.value=state[e.dataset.key]});$('parameters').querySelectorAll('input').forEach(input=>input.oninput=()=>{let value=Number(input.value);if(input.value===''||!Number.isFinite(value)||Math.abs(value)>10000){input.setCustomValidity('Valeur attendue entre −10 000 et 10 000.');input.reportValidity();return}input.setCustomValidity('');state[input.dataset.key]=value;document.querySelectorAll(`[data-key="${input.dataset.key}"]`).forEach(e=>{if(e!==input){if(e.type==='range'){e.min=Math.min(Number(e.min),value);e.max=Math.max(Number(e.max),value)}e.value=value}});render()})}
-function table(headers,rows){return `<table><thead><tr>${headers.map(h=>`<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>'<tr>'+row.map(v=>`<td>${v}</td>`).join('')+'</tr>').join('')}</tbody></table>`}
-function plot(values){let min=Math.min(0,...values),max=Math.max(0,...values),range=max-min||2;min-=range*.12;max+=range*.12;const x=n=>55+n*670/N,y=v=>350-(v-min)/(max-min)*310;let s='';for(let k=0;k<=4;k++){let v=min+(max-min)*k/4,py=y(v);s+=`<line x1="55" x2="725" y1="${py}" y2="${py}" stroke="#edf0f6"/><text x="48" y="${py+4}" text-anchor="end" font-size="11" fill="#96a0b3">${fmt(v)}</text>`}s+=`<line x1="55" x2="725" y1="${y(0)}" y2="${y(0)}" stroke="#bec7d9"/>`;for(let n=0;n<=N;n+=Math.max(1,Math.ceil(N/10)))s+=`<text x="${x(n)}" y="376" text-anchor="middle" font-size="12" fill="#96a0b3">${n}</text>`;s+='<text x="739" y="376" font-size="12">n</text><text x="14" y="20" font-size="12">uₙ</text>';values.forEach((v,n)=>{s+=`<g class="point" data-n="${n}" role="button" tabindex="0" aria-label="Rang ${n}, valeur ${fmt(v)}"><circle cx="${x(n)}" cy="${y(v)}" r="13" fill="transparent"/><circle cx="${x(n)}" cy="${y(v)}" r="${n===selected?7:4}" fill="${n===selected?'#da681e':'#3459e8'}"/><title>u${n} = ${fmt(v)}</title></g>`});$('plot').innerHTML=s;$('plot-count').textContent=`${values.length} termes · rangs 0 à ${values.length-1}`;$('plot').querySelectorAll('[data-n]').forEach(el=>{const go=()=>{selected=+el.dataset.n;render()};el.onclick=go;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}}})}
-function render(){let vals=Seq.terms(state,N);selected=Math.min(selected,vals.length-1);$('selected').max=vals.length-1;$('selected').value=selected;$('selected-rank').textContent=selected;$('sticky-formula').textContent=rule();$('live-rule').textContent=rule()+(recurrence()?' • '+recurrence():'');plot(vals);let v=Seq.term(state,selected),prior=selected?Seq.term(state,selected-1):null,explain=selected===0?'C’est le premier terme.':state.kind==='arith'?`${fmt(prior)} + (${fmt(state.r)}) = ${fmt(v)}`:state.kind==='geo'?`${fmt(prior)} × (${fmt(state.q)}) = ${fmt(v)}`:state.kind==='affine'?`(${fmt(state.q)}) × ${fmt(prior)} + (${fmt(state.d)}) = ${fmt(v)}`:`Remplacer n par ${selected} dans la formule explicite.`;$('term-card').innerHTML=`<b>u<sub>${selected}</sub> = ${fmt(v)}</b> · ${explain}`;$('values').innerHTML=table(['Rang n','Terme uₙ','Différence uₙ₊₁ − uₙ','Rapport uₙ₊₁/uₙ'],vals.map((v,n)=>[n,fmt(v),n<vals.length-1?fmt(vals[n+1]-v):'—',n===vals.length-1?'—':v===0?'Non défini':fmt(vals[n+1]/v)]));let proof=state.kind==='arith'?`uₙ₊₁ − uₙ = r = ${fmt(state.r)}.`:state.kind==='geo'?`uₙ₊₁ − uₙ = uₙ(q − 1) = uₙ × (${fmt(state.q-1)}).`:state.kind==='inverse'?`uₙ₊₁ − uₙ = −A/[(n + 1)(n + 2)] = ${fmt(-state.A)}/[(n + 1)(n + 2)]. Le dénominateur est positif.`:state.kind==='affine'?`En posant dₙ = uₙ₊₁ − uₙ, on a d₀ = ${fmt(state.u*(state.q-1)+state.d)} et dₙ₊₁ = qdₙ. On étudie donc le signe de d₀qⁿ.`:'';$('variation').innerHTML=`<b>${proof}</b><p>${Seq.variation(state)}</p><small>Cette justification vaut pour tous les rangs. Le tableau ci-dessous illustre seulement les premiers.</small>`;$('variation-values').innerHTML=table(['n','uₙ','uₙ₊₁','Comparaison'],vals.slice(0,6).map((v,n)=>[n,fmt(v),fmt(Seq.term(state,n+1)),v<Seq.term(state,n+1)?'↗ augmente':v>Seq.term(state,n+1)?'↘ diminue':'→ égalité']));$('limit-result').innerHTML=`<h3>Quand n devient très grand…</h3><p>${Seq.limit(state)}</p><p class="caption">Pour observer davantage de termes, augmente N. Cette fenêtre finie est une illustration.</p>`;renderSum();renderThreshold();renderAlgo();}
-function renderSum(){let p=+$('sum-p').value,m=+$('sum-m').value;if($('sum-p').value===''||$('sum-m').value===''||!Number.isInteger(p)||!Number.isInteger(m)||p<0||m<p||m>60){$('sum-result').textContent='Choisis des rangs entiers avec 0 ≤ p ≤ m ≤ 60.';$('sum-bars').innerHTML='';return}let total=Seq.sum(state,p,m),num=m-p+1,a=Seq.term(state,p),b=Seq.term(state,m);let proof=state.kind==='arith'?`${num} × (${fmt(a)} + ${fmt(b)}) / 2`:state.kind==='geo'?(state.q===1?`${num} × ${fmt(a)}`:`${fmt(a)} × [1 − (${fmt(state.q)})^${num}] / [1 − (${fmt(state.q)})]`):'Addition directe des termes (aucune formule arithmétique ou géométrique supposée).';$('sum-result').innerHTML=`<b>${num} termes, du rang ${p} au rang ${m} inclus.</b><p>${proof}</p><strong>S = ${fmt(total)}</strong>`;let vs=Array.from({length:num},(_,i)=>Seq.term(state,p+i)),max=Math.max(...vs.map(Math.abs),1);$('sum-bars').innerHTML='<div class="sum-strip" aria-hidden="true">'+vs.map(v=>`<i class="${v<0?'neg':''}" style="height:${Math.max(2,Math.abs(v)/max*90)}px"></i>`).join('')+'</div><p class="caption">Hauteurs : valeurs absolues des termes. Bleu : positif ; orange : négatif. Ce dessin n’est pas une aire sous une courbe.</p>'}
-function renderThreshold(){let T=+$('threshold').value;if($('threshold').value===''||!Number.isFinite(T)){$('threshold-result').textContent='Entre un seuil fini.';return}let op=$('threshold-op').value,r=Seq.threshold(state,T,op),symbol=op==='ge'?'≥':'≤';$('threshold-result').innerHTML=r.status==='found'?`<b>Premier rang trouvé : n = ${r.n}.</b><br>u<sub>${r.n}</sub> = ${fmt(r.v)} ${symbol} ${fmt(T)}.${r.n?` Le terme précédent vaut ${fmt(r.prev)}.`:' La condition est déjà vraie au départ.'}<p>Tous les rangs précédents ont été testés. Cela ne signifie pas forcément que la condition restera vraie ensuite.</p>`:r.status==='precision'?`Calcul arrêté au rang ${r.n} : précision numérique insuffisante (valeurs extrêmes ou arrondi près de la limite). Aucun seuil trouvé avant cet arrêt ; on ne conclut pas à une impossibilité.`:'Aucun terme trouvé entre 0 et 10 000. Cette recherche bornée ne prouve pas que le seuil est impossible.';}
-function motif(){let n=+$('motif-n').value,tri=$('motif').value==='triangle',svg='';for(let row=0;row<n;row++)for(let col=0;col<(tri?row+1:n);col++)svg+=`<circle cx="${25+col*24}" cy="${20+row*24}" r="8" fill="${row===n-1||!tri&&col===n-1?'#da681e':'#3459e8'}"/>`;$('motif-svg').innerHTML=svg;$('motif-result').innerHTML=tri?`<b>Étape n = ${n} : ${n*(n+1)/2} points.</b><p>Tₙ = 1 + … + n = n(n + 1)/2.</p><p>T₀ = 0 ; Tₙ₊₁ = Tₙ + (n + 1). On ajoute une rangée de n + 1 points. L’ajout varie : la suite n’est pas arithmétique.</p>`:`<b>Étape n = ${n} : ${n*n} points.</b><p>Cₙ = n² ; C₀ = 0.</p><p>Cₙ₊₁ − Cₙ = 2n + 1 : une bordure en L ajoute un nombre impair de points. Donc Cₙ₊₁ = Cₙ + 2n + 1.</p>`;}
-const models={saving:{text:'Sanaa dispose de 100 € au départ et met de côté 20 € chaque mois : uₙ est son épargne après n mois, sans intérêts. uₙ = 100 + 20n.',s:{kind:'arith',u:100,r:20}},capital:{text:'Un capital initial de 1 000 € gagne 5 % par an, intérêts réinvestis : uₙ = 1 000 × 1,05ⁿ. Modèle théorique, sans frais ni fiscalité.',s:{kind:'geo',u:1000,q:1.05}},population:{text:'Une population de 500 individus croît de 8 % par an : uₙ = 500 × 1,08ⁿ. Les valeurs du modèle peuvent être non entières ; un taux fixe ne reste pas forcément réaliste indéfiniment.',s:{kind:'geo',u:500,q:1.08}},decay:{text:'Une quantité initiale de 100 mg diminue de 20 % par période : uₙ = 100 × 0,8ⁿ. Le modèle tend vers 0 sans l’atteindre à un rang fini.',s:{kind:'geo',u:100,q:.8}}};
-function renderAlgo(){let kind=$('algorithm').value,k=+$('algo-n').value;if(!Number.isInteger(k)||k<0||k>30||$('algo-n').value===''){$('algo-result').textContent='Entre un entier de 0 à 30 (Syracuse : de 1 à 30).';return}let out,code;if(kind==='factorial'){let v=1n;for(let i=1;i<=k;i++)v*=BigInt(i);out=`${k}! = ${v}`;code=`p = 1\nfor i in range(1, ${k+1}):\n    p = p * i\nprint(p)`}else if(kind==='fibonacci'){let a=0,b=1,vs=[0];for(let i=0;i<k;i++){[a,b]=[b,a+b];vs.push(a)}out=`Rangs 0 à ${k} : `+vs.join(' ; ');code=`a, b = 0, 1\ntermes = [a]\nfor i in range(${k}):\n    a, b = b, a + b\n    termes.append(a)\nprint(termes)`}else if(kind==='syracuse'){if(k===0){$('algo-result').textContent='Syracuse demande un départ strictement positif.';$('code').textContent='';return}let u=k,vs=[u];while(u!==1&&vs.length<201){u=u%2===0?u/2:3*u+1;vs.push(u)}out=`${vs.length-1} étapes : `+vs.join(' → ')+(u===1?' · 1 atteint.':' · arrêt après 200 étapes.');code=`u = ${k}\ntermes = [u]\nwhile u != 1 and len(termes) <= 200:\n    u = u // 2 if u % 2 == 0 else 3*u + 1\n    termes.append(u)\nprint(termes)`}else{let vs=Seq.terms(state,k);out=kind==='sum'?`Somme de u₀ à u${k} : ${fmt(vs.reduce((a,b)=>a+b,0))}`:`Rangs 0 à ${k} : `+vs.map(fmt).join(' ; ');let expression=state.kind==='quad'?`(${state.a})*n**2 + (${state.b})*n + (${state.c})`:state.kind==='inverse'?`(${state.L}) + (${state.A})/(n+1)`:null;if(expression)code=`termes = [${expression} for n in range(${k+1})]`;else code=`u = ${state.u}\ntermes = [u]\nfor n in range(${k}):\n    u = ${state.kind==='arith'?`u + (${state.r})`:`(${state.q})*u${state.kind==='affine'?` + (${state.d})`:''}`}\n    termes.append(u)`;code+=kind==='sum'?'\ns = 0\nfor valeur in termes:\n    s = s + valeur\nprint(s)':'\nprint(termes)';}$('code').textContent=code;$('algo-result').textContent=out;}
-$('family').onchange=()=>{state={kind:$('family').value,...defaults[$('family').value]};controls();render()};$('count').oninput=()=>{let v=+$('count').value;if(Number.isInteger(v)&&v>=2&&v<=60){N=v;render()}else{$('count').setCustomValidity('Un entier de 2 à 60 est attendu.');$('count').reportValidity();return}$('count').setCustomValidity('')};$('selected').oninput=()=>{selected=+$('selected').value;render()};$('prev').onclick=()=>{selected=Math.max(0,selected-1);render()};$('next').onclick=()=>{selected=Math.min(N,selected+1);render()};for(let id of ['sum-p','sum-m'])$(id).oninput=renderSum;for(let id of ['threshold','threshold-op'])$(id).oninput=renderThreshold;for(let id of ['motif','motif-n'])$(id).oninput=motif;$('model').onchange=()=>$('model-description').textContent=models[$('model').value].text;$('model').onchange();$('load-model').onclick=()=>{state={...models[$('model').value].s};$('family').value=state.kind;controls();render();$('explorer').scrollIntoView()};$('run-algo').onclick=renderAlgo;$('algorithm').onchange=renderAlgo;$('reset').onclick=()=>{state={kind:'arith',...defaults.arith};N=15;selected=4;$('family').value='arith';$('count').value=15;controls();render()};
-const skills=['Distinguer une suite et un terme, repérer le premier rang','Calculer avec une formule explicite ou une récurrence','Traduire un motif en formule','Reconnaître et justifier une famille','Passer de la récurrence au terme général','Prouver le sens de variation','Calculer une somme et expliquer sa formule','Modéliser un ajout fixe ou un taux fixe','Chercher un seuil, distinguer observation et preuve','Conjecturer une limite ou son absence','Lire des boucles, des listes et les exemples d’algorithmes'];$('checklist').innerHTML=skills.map((t,i)=>`<label><input type="checkbox" data-skill="${i}">${t}</label>`).join('');try{document.querySelectorAll('[data-skill]').forEach(e=>{e.checked=localStorage.getItem('sanaa-suite-'+e.dataset.skill)==='1';e.onchange=()=>{try{localStorage.setItem('sanaa-suite-'+e.dataset.skill,e.checked?'1':'0')}catch{}}})}catch{}
-const links=[...document.querySelectorAll('nav a')];links.forEach(a=>a.onclick=()=>{links.forEach(l=>l.removeAttribute('aria-current'));a.setAttribute('aria-current','location')});let tick=false;addEventListener('scroll',()=>{if(tick)return;tick=true;requestAnimationFrame(()=>{let active=links[0];links.forEach(a=>{if(document.querySelector(a.hash).getBoundingClientRect().top<180)active=a});links.forEach(a=>a===active?a.setAttribute('aria-current','location'):a.removeAttribute('aria-current'));tick=false})},{passive:true});controls();render();motif();
+/* Mini-site Suites : ateliers. Dépend de fx.js et mini.js. */
+(function () {
+  'use strict';
+  var h = Mini.h, fmt = FX.fmt;
+  var BLUE = '#3459e8', ORANGE = '#da681e', PURPLE = '#8053bd', GREEN = '#1d7a46', GREY = '#8b96b0';
+  function r2(v) { return fmt(Math.round(v * 100) / 100); }
+  function r3(v) { return fmt(Math.round(v * 1000) / 1000); }
+  function big(v) { return Math.abs(v) >= 1e6 ? v.toExponential(2).replace('.', ',') : r2(v); }
+  function range(vals, pad) { var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals); if (hi - lo < 1e-9) { lo -= 1; hi += 1; } var p = (hi - lo) * (pad || 0.15); return [lo - p, hi + p]; }
+  function plot(g, vals, color, o) {
+    o = o || {};
+    if (o.link) for (var i = 0; i < vals.length - 1; i++) g.line(i, vals[i], i + 1, vals[i + 1], color, { width: 1.2, dashed: true });
+    vals.forEach(function (v, i) { g.point(i, v, color, { r: o.r || 4.5 }); });
+  }
+  function seqArith(u0, r, N) { var a = []; for (var i = 0; i <= N; i++) a.push(u0 + i * r); return a; }
+  function seqGeo(u0, q, N) { var a = []; for (var i = 0; i <= N; i++) a.push(u0 * Math.pow(q, i)); return a; }
+  function rec(u0, f, N) { var a = [u0]; for (var i = 0; i < N; i++) a.push(f(a[i], i)); return a; }
+  function tableHTML(vals, label) {
+    var n = Math.min(vals.length, 9), rows = '<tr><th>n</th>', row2 = '<tr><th>' + label + '</th>';
+    for (var i = 0; i < n; i++) { rows += '<td>' + i + '</td>'; row2 += '<td class="mono">' + big(vals[i]) + '</td>'; }
+    return '<table style="margin-top:6px"><tbody>' + rows + '</tr>' + row2 + '</tr></tbody></table>';
+  }
+
+  /* 1. Générer une suite */
+  (function () {
+    var L = Mini.makeLab('lab1', '1. Générer une suite', 'explicite ou par récurrence');
+    var g = new FX.Graph(L.graph, { xmin: -0.5, xmax: 10.5, ymin: -5, ymax: 20, label: 'Termes de la suite en points' });
+    var out = h('<div class="readout" aria-live="polite"></div>');
+    var P = [
+      { name: 'uₙ = n² − 3 (explicite)', kind: 'Explicite : on calcule uₙ directement.', gen: function (N) { var a = []; for (var i = 0; i <= N; i++) a.push(i * i - 3); return a; } },
+      { name: 'u₀ = 2, uₙ₊₁ = 3uₙ − 1 (récurrence)', kind: 'Récurrence : chaque terme se calcule à partir du précédent.', gen: function (N) { return rec(2, function (u) { return 3 * u - 1; }, N); } },
+      { name: 'u₀ = 20, uₙ₊₁ = 0,5uₙ + 4', kind: 'Récurrence : la suite semble se stabiliser près de 8.', gen: function (N) { return rec(20, function (u) { return 0.5 * u + 4; }, N); } },
+      { name: 'uₙ = (−1)ⁿ × n', kind: 'Explicite : les signes alternent, pas de limite.', gen: function (N) { var a = []; for (var i = 0; i <= N; i++) a.push((i % 2 ? -1 : 1) * i); return a; } },
+      { name: 'u₀ = 1, uₙ₊₁ = uₙ + n + 1', kind: 'Récurrence : on ajoute n + 1 : ce sont les nombres triangulaires.', gen: function (N) { return rec(1, function (u, i) { return u + i + 2; }, N); } }
+    ];
+    var idx = 0, N = 8;
+    function draw() {
+      var v = P[idx].gen(N), rg = range(v);
+      g.view(-0.5, N + 0.5, rg[0], rg[1]); g.clear(); plot(g, v, BLUE, { link: true });
+      out.innerHTML = '<b>' + P[idx].kind + '</b>' + tableHTML(v, 'uₙ');
+    }
+    L.side.appendChild(Mini.select('s1-p', 'Suite', P.map(function (p) { return p.name; }), function (i) { idx = i; draw(); }));
+    L.side.appendChild(Mini.slider('s1-n', 'Jusqu’au rang N =', 4, 15, 1, 8, function (v) { N = v; draw(); }));
+    L.side.appendChild(out); draw();
+  })();
+
+  /* 2. Arithmétique contre géométrique */
+  (function () {
+    var L = Mini.makeLab('lab2', '2. Arithmétique contre géométrique', 'additionner ou multiplier');
+    var g = new FX.Graph(L.graph, { xmin: -0.5, xmax: 10.5, ymin: -5, ymax: 30, label: 'Une suite arithmétique et une suite géométrique' });
+    var out = h('<div class="readout" aria-live="polite"></div>');
+    var s = { u0: 2, r: 3, q: 1.4, N: 10 };
+    function draw() {
+      var a = seqArith(s.u0, s.r, s.N), b = seqGeo(s.u0, s.q, s.N), rg = range(a.concat(b));
+      g.view(-0.5, s.N + 0.5, rg[0], rg[1]); g.clear(); plot(g, a, BLUE, { link: true }); plot(g, b, ORANGE, { link: true });
+      var first = null; for (var i = 1; i <= s.N; i++) if (b[i] > a[i] && s.q > 1) { first = i; break; }
+      out.innerHTML = '<span style="color:' + BLUE + '">Arithmétique : uₙ = ' + r2(s.u0) + ' + ' + r2(s.r) + 'n</span> (points alignés)<br><span style="color:' + ORANGE + '">Géométrique : vₙ = ' + r2(s.u0) + ' × ' + r2(s.q) + 'ⁿ</span> (courbe)<br>Au rang ' + s.N + ' : uₙ = <b class="mono">' + big(a[s.N]) + '</b> et vₙ = <b class="mono">' + big(b[s.N]) + '</b>.<br>' +
+        (first ? 'La géométrique dépasse l’arithmétique à partir du rang <b>' + first + '</b> : multiplier finit toujours par l’emporter sur additionner (si q &gt; 1).' : (s.q > 1 ? 'Sur cette fenêtre, la géométrique ne dépasse pas encore l’arithmétique : augmente N.' : 'Avec q ≤ 1 la géométrique ne grandit pas : elle ne dépasse pas la croissance linéaire.'));
+    }
+    L.side.appendChild(Mini.slider('s2-u', 'Premier terme u₀ =', -5, 10, 1, 2, function (v) { s.u0 = v; draw(); }));
+    L.side.appendChild(Mini.slider('s2-r', 'Raison r (arithmétique) =', -5, 5, 0.5, 3, function (v) { s.r = v; draw(); }));
+    L.side.appendChild(Mini.slider('s2-q', 'Raison q (géométrique) =', -1.5, 2, 0.1, 1.4, function (v) { s.q = v; draw(); }));
+    L.side.appendChild(Mini.slider('s2-n', 'Jusqu’au rang N =', 5, 20, 1, 10, function (v) { s.N = v; draw(); }));
+    L.side.appendChild(out); draw();
+  })();
+
+  /* 3. Sommes */
+  (function () {
+    var L = Mini.makeLab('lab3', '3. Les sommes : la preuve en barres', '1 + 2 + … + n et 1 + q + … + qⁿ');
+    var g = new FX.Graph(L.graph, { xmin: -0.5, xmax: 12, ymin: 0, ymax: 14, label: 'Barres des termes de la somme' });
+    var out = h('<div class="readout" aria-live="polite"></div>');
+    var kind = 0, n = 6, q = 2;
+    function draw() {
+      var terms = [], i;
+      if (kind === 0) for (i = 1; i <= n; i++) terms.push(i); else for (i = 0; i <= n; i++) terms.push(Math.pow(q, i));
+      var top = Math.max.apply(null, terms) * 1.15;
+      g.view(-0.5, terms.length + 0.5, 0, top); g.clear();
+      terms.forEach(function (t, k) { g.rect(k + 0.1, k + 0.9, 0, t, kind === 0 ? BLUE : ORANGE, { opacity: 0.35 }); });
+      var S = terms.reduce(function (a, b) { return a + b; }, 0), formula;
+      if (kind === 0) {
+        formula = n + ' × ' + (n + 1) + ' / 2 = <b class="mono">' + (n * (n + 1) / 2) + '</b>';
+        out.innerHTML = '1 + 2 + … + ' + n + ' = <b class="mono">' + S + '</b> (somme des barres).<br>Formule : ' + formula + '<br><b>Idée de Gauss :</b> chaque barre k s’associe à la barre n + 1 − k, et chaque paire vaut n + 1. Il y a n barres donc 2S = n(n + 1).';
+      } else {
+        var f = Math.abs(q - 1) < 1e-9 ? n + 1 : (1 - Math.pow(q, n + 1)) / (1 - q);
+        out.innerHTML = '1 + q + … + qⁿ avec q = ' + r2(q) + ' et n = ' + n + ' (' + (n + 1) + ' termes)<br>Somme des barres : <b class="mono">' + big(S) + '</b><br>Formule (1 − qⁿ⁺¹)/(1 − q) = <b class="mono">' + big(f) + '</b>' + (Math.abs(q - 1) < 1e-9 ? ' (cas q = 1 : la formule ne s’applique pas, la somme vaut n + 1)' : '') + '<br><b>Idée :</b> qS − S = qⁿ⁺¹ − 1, car tout se simplifie sauf les extrémités.';
+      }
+    }
+    var sel = Mini.select('s3-k', 'Somme', ['Arithmétique : 1 + 2 + … + n', 'Géométrique : 1 + q + … + qⁿ'], function (i) { kind = i; draw(); });
+    L.side.appendChild(sel);
+    L.side.appendChild(Mini.slider('s3-n', 'n =', 2, 12, 1, 6, function (v) { n = v; draw(); }));
+    L.side.appendChild(Mini.slider('s3-q', 'Raison q (géométrique) =', 0.5, 2, 0.1, 2, function (v) { q = v; draw(); }));
+    L.side.appendChild(out); draw();
+  })();
+
+  /* 4. Variations : le signe de uₙ₊₁ − uₙ */
+  (function () {
+    var L = Mini.makeLab('lab4', '4. Variations : étudier uₙ₊₁ − uₙ', 'la différence commande');
+    var g = new FX.Graph(L.graph, { xmin: -0.5, xmax: 10.5, ymin: -10, ymax: 20, label: 'Termes de la suite et leurs différences' });
+    var out = h('<div class="readout" aria-live="polite"></div>');
+    var P = [
+      { name: 'uₙ = n² − 6n', f: function (n) { return n * n - 6 * n; }, d: '2n − 5' },
+      { name: 'uₙ = 10 − 2n', f: function (n) { return 10 - 2 * n; }, d: '−2 (constante : arithmétique)' },
+      { name: 'uₙ = 100 / (n + 1)', f: function (n) { return 100 / (n + 1); }, d: '−100/((n+1)(n+2)), toujours négatif' },
+      { name: 'uₙ = (−2)ⁿ', f: function (n) { return Math.pow(-2, n); }, d: '(−2)ⁿ × (−3), signe alterné' },
+      { name: 'uₙ = 0,8ⁿ × 20', f: function (n) { return 20 * Math.pow(0.8, n); }, d: '20·0,8ⁿ × (−0,2), toujours négatif' }
+    ];
+    var idx = 0, N = 10;
+    function draw() {
+      var p = P[idx], u = [], d = [], i;
+      for (i = 0; i <= N; i++) u.push(p.f(i)); for (i = 0; i < N; i++) d.push(u[i + 1] - u[i]);
+      var rg = range(u.concat(d).concat([0]));
+      g.view(-0.5, N + 0.5, rg[0], rg[1]); g.clear(); g.line(-0.5, 0, N + 0.5, 0, GREY, { dashed: true });
+      plot(g, u, BLUE, { link: true }); d.forEach(function (v, k) { g.point(k, v, PURPLE, { r: 3.5, open: true }); });
+      var pos = d.every(function (x) { return x >= -1e-9; }), neg = d.every(function (x) { return x <= 1e-9; });
+      out.innerHTML = '<span style="color:' + BLUE + '">● uₙ</span> &nbsp; <span style="color:' + PURPLE + '">○ uₙ₊₁ − uₙ</span><br>uₙ₊₁ − uₙ = <b>' + p.d + '</b><br>Sur les ' + (N + 1) + ' premiers rangs : ' + (pos && neg ? '<b>constante nulle</b>' : pos ? '<b>croissante</b> (différences ≥ 0)' : neg ? '<b>décroissante</b> (différences ≤ 0)' : '<b>pas monotone</b> : les différences changent de signe') + '.<br>Les points violets au-dessus de 0 correspondent aux rangs où la suite monte.';
+    }
+    L.side.appendChild(Mini.select('s4-p', 'Suite', P.map(function (p) { return p.name; }), function (i) { idx = i; draw(); }));
+    L.side.appendChild(Mini.slider('s4-n', 'Jusqu’au rang N =', 5, 15, 1, 10, function (v) { N = v; draw(); }));
+    L.side.appendChild(out); draw();
+  })();
+
+  /* 5. Seuil et Python */
+  (function () {
+    var L = Mini.makeLab('lab5', '5. Seuil : premier rang qui dépasse S', 'boucle while');
+    var g = new FX.Graph(L.graph, { xmin: -0.5, xmax: 20.5, ymin: 0, ymax: 100, label: 'Suite géométrique et seuil' });
+    var out = h('<div class="readout" aria-live="polite"></div>'), code = h('<pre class="code" style="background:#f1f4fb;color:#20283d;padding:10px;border-radius:8px;overflow:auto;font-size:13px"></pre>');
+    var s = { u0: 5, q: 1.3, S: 60 };
+    function draw() {
+      var n = 0, u = s.u0, guard = 0;
+      while (u <= s.S && guard < 500) { u = u * s.q; n++; guard++; }
+      var found = guard < 500 && s.q > 1 && s.u0 > 0;
+      var N = Math.max(8, Math.min(40, (found ? n + 4 : 20))), vals = seqGeo(s.u0, s.q, N), rg = range(vals.concat([s.S]));
+      g.view(-0.5, N + 0.5, Math.min(0, rg[0]), rg[1]); g.clear(); g.line(-0.5, s.S, N + 0.5, s.S, PURPLE, { width: 2 });
+      plot(g, vals, BLUE, { link: true }); if (found) g.point(n, vals[n], GREEN, { r: 7 });
+      code.textContent = 'u = ' + r2(s.u0) + '\nn = 0\nwhile u <= ' + r2(s.S) + ':\n    u = ' + r2(s.q) + ' * u\n    n = n + 1\nprint(n)   # affiche ' + (found ? n : '(boucle infinie)');
+      out.innerHTML = found ? 'Premier rang avec uₙ &gt; ' + r2(s.S) + ' : <b class="mono">n = ' + n + '</b> (u<sub>' + n + '</sub> ≈ ' + r2(u) + ', alors que u<sub>' + (n - 1) + '</sub> ≈ ' + r2(u / s.q) + ' ≤ ' + r2(s.S) + ').<br>Comme la suite est croissante, uₙ &gt; S pour tout rang ≥ ' + n + '.' : (s.u0 <= 0 || s.q <= 1 ? '<b>Le seuil n’est jamais dépassé</b> : il faut u₀ &gt; 0 et q &gt; 1. Attention : sans cette condition, la boucle while ne s’arrête jamais.' : 'Seuil déjà dépassé dès le rang 0.');
+      if (s.u0 > s.S) out.innerHTML = 'Le seuil est déjà dépassé au rang 0 : n = 0.';
+    }
+    L.side.appendChild(Mini.slider('s5-u', 'Premier terme u₀ =', 1, 20, 1, 5, function (v) { s.u0 = v; draw(); }));
+    L.side.appendChild(Mini.slider('s5-q', 'Raison q =', 1.05, 2, 0.05, 1.3, function (v) { s.q = v; draw(); }));
+    L.side.appendChild(Mini.slider('s5-s', 'Seuil S =', 20, 200, 5, 60, function (v) { s.S = v; draw(); }));
+    L.side.appendChild(code); L.side.appendChild(out); draw();
+  })();
+
+  /* 6. Modéliser : un taux constant */
+  (function () {
+    var L = Mini.makeLab('lab6', '6. Modéliser un taux constant', 'capital, population, baisse');
+    var g = new FX.Graph(L.graph, { xmin: -0.5, xmax: 20.5, ymin: 0, ymax: 3000, label: 'Évolution à taux constant' });
+    var out = h('<div class="readout" aria-live="polite"></div>');
+    var s = { c: 1000, t: 5, N: 15 };
+    function draw() {
+      var q = 1 + s.t / 100, v = seqGeo(s.c, q, s.N), rg = range(v.concat([0]), 0.1);
+      g.view(-0.5, s.N + 0.5, Math.max(0, rg[0]), rg[1]); g.clear(); plot(g, v, BLUE, { link: true });
+      var dbl = null, half = null; for (var i = 1; i <= 400; i++) { var x = s.c * Math.pow(q, i); if (!dbl && x >= 2 * s.c) dbl = i; if (!half && x <= s.c / 2) half = i; }
+      var lin = s.c * (1 + s.t / 100 * s.N);
+      out.innerHTML = 'Taux ' + (s.t >= 0 ? '+' : '') + s.t + ' % par période : coefficient <b class="mono">q = ' + r3(q) + '</b>.<br>Après ' + s.N + ' périodes : <b class="mono">' + r2(v[s.N]) + '</b> (variation totale ' + r2((v[s.N] / s.c - 1) * 100) + ' %).<br>' + (dbl ? 'Le capital double au bout de <b>' + dbl + '</b> périodes.' : '') + (half ? 'Il est divisé par 2 au bout de <b>' + half + '</b> périodes.' : '') + '<br>Piège : ' + s.N + ' hausses de ' + s.t + ' % ne font pas ' + r2(s.t * s.N) + ' % (ce serait ' + r2(lin) + ') mais bien plus quand t &gt; 0 : les intérêts rapportent des intérêts.';
+    }
+    L.side.appendChild(Mini.slider('s6-c', 'Valeur initiale =', 100, 2000, 100, 1000, function (v) { s.c = v; draw(); }));
+    L.side.appendChild(Mini.slider('s6-t', 'Taux par période (%) =', -20, 20, 1, 5, function (v) { s.t = v; draw(); }));
+    L.side.appendChild(Mini.slider('s6-n', 'Nombre de périodes N =', 5, 30, 1, 15, function (v) { s.N = v; draw(); }));
+    L.side.appendChild(out); draw();
+  })();
+
+  Mini.exercises(document.getElementById('exos'), window.SUI_EX, 'suites');
+  Mini.checklist(document.getElementById('checklist'), 'suites', [
+    'Je calcule des termes d’une suite explicite et d’une suite récurrente.',
+    'Je reconnais une suite arithmétique (différence constante) ou géométrique (quotient constant).',
+    'Je donne uₙ en fonction de u₀ ou de uₚ.',
+    'Je connais et sais démontrer 1 + 2 + … + n et la somme géométrique.',
+    'Je compte correctement le nombre de termes d’une somme.',
+    'J’étudie le signe de uₙ₊₁ − uₙ pour trouver les variations.',
+    'J’écris et lis une boucle while pour un seuil.',
+    'Je traduis « +t % » en coefficient 1 + t/100 et j’enchaîne les évolutions.'
+  ]);
+})();

@@ -1,5 +1,5 @@
 /* Service worker généré par scripts/build-pwa.mjs : ne pas modifier sw.js à la main. */
-const VERSION = "33ef8f2c6a70";
+const VERSION = "689bf1a6b01c";
 const CACHE = "maths-sanaa-" + VERSION;
 const ASSETS = [
  "/",
@@ -51,13 +51,10 @@ const ASSETS = [
  "/manifest.webmanifest",
  "/polynomes/",
  "/polynomes/app.js",
- "/polynomes/navigation.js",
- "/polynomes/study.js",
- "/polynomes/style.css",
+ "/polynomes/content.js",
  "/suites/",
  "/suites/app.js",
- "/suites/math.js",
- "/suites/style.css",
+ "/suites/content.js",
  "/trigonometrie/",
  "/trigonometrie/app.js",
  "/trigonometrie/content.js"
