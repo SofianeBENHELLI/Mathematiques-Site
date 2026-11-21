@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SPEC = ROOT / "spec"
 TYPES = {"connaissance", "capacite", "demonstration", "algorithme", "automatisme"}
 NIVEAU = {"complet", "partiel", "aucun"}
-MODULES_EXISTANTS = {"polynomes", "suites", "fonctions", "derivation"}
+MODULES_EXISTANTS = {"polynomes", "suites", "fonctions", "derivation", "exponentielle", "trigonometrie"}
 
 
 def load(path):

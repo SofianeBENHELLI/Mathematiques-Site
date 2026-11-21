@@ -40,6 +40,11 @@ ok(isNaN(FX.compile('sqrt(x)')(-1)), 'sqrt négatif');
 // racines et dichotomie
 const r = FX.roots(FX.compile('x^3-3x+1'), -3, 3);
 ok(r.length === 3 && Math.abs(r[0] + 1.879385) < 1e-5, 'racines ' + r);
+// paramètres
+{ const f = FX.compile('a*x^2+b*x+c', ['a','b','c']); ok(f(2, {a:1,b:-3,c:2}) === 0, 'paramètres'); 
+  const d = FX.compile(FX.derive('a*x^2+b*x+c', ['a','b','c']), ['a','b','c']); ok(d(3, {a:2,b:1,c:7}) === 13, 'dérivée paramétrée');
+  const g = FX.compile('k*e^(r*x)', ['k','r']); ok(Math.abs(g(1,{k:2,r:0.5}) - 2*Math.exp(0.5)) < 1e-12, 'exp paramétrée');
+  ok(FX.toString(FX.derive('k*e^(r*x)', ['k','r']), ['k','r']).length > 0, 'affichage'); }
 console.log('affichage :', ['x^2','x e^x','(2x+1)^3','1/x','sqrt(x)','(x^2+1)/(x-1)','cos(x)^2','xe^(-x)'].map(s => s + ' -> ' + FX.pretty(FX.toString(FX.derive(s)))).join('\n  '));
 console.log(fail ? fail + ' échec(s)' : 'tous les tests passent');
 process.exit(fail ? 1 : 0);

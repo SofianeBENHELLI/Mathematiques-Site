@@ -1,5 +1,5 @@
 /* Service worker généré par scripts/build-pwa.mjs : ne pas modifier sw.js à la main. */
-const VERSION = "18935de2947a";
+const VERSION = "33ef8f2c6a70";
 const CACHE = "maths-sanaa-" + VERSION;
 const ASSETS = [
  "/",
@@ -23,6 +23,7 @@ const ASSETS = [
  "/assets/mini.css",
  "/assets/mini.js",
  "/assets/mock-exam-state.js",
+ "/assets/nav.js",
  "/assets/pwa.js",
  "/assets/simulations.js",
  "/assets/style.css",
@@ -37,6 +38,9 @@ const ASSETS = [
  "/derivation/",
  "/derivation/app.js",
  "/derivation/content.js",
+ "/exponentielle/",
+ "/exponentielle/app.js",
+ "/exponentielle/content.js",
  "/fonctions/",
  "/fonctions/app.js",
  "/fonctions/content.js",
@@ -53,7 +57,10 @@ const ASSETS = [
  "/suites/",
  "/suites/app.js",
  "/suites/math.js",
- "/suites/style.css"
+ "/suites/style.css",
+ "/trigonometrie/",
+ "/trigonometrie/app.js",
+ "/trigonometrie/content.js"
 ];
 
 self.addEventListener("install", (e) => {

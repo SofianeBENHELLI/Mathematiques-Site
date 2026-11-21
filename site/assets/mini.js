@@ -167,5 +167,44 @@
     });
   }
 
-  return { exercises: exercises, variationTable: variationTable, solveIneq: solveIneq, slider: slider, select: select, checklist: checklist, h: h, esc: esc, load: load, save: save, readNumber: readNumber };
+
+  /* ---------- Laboratoire générique (graphique + panneau latéral) ---------- */
+  function makeLab(rootId, title, sub) {
+    var el = h('<div class="lab"><h3>' + title + '<small>' + (sub || '') + '</small></h3><div class="lab-grid"><div class="lab-graph"></div><div class="lab-side"></div></div></div>');
+    document.getElementById(rootId).appendChild(el);
+    return { graph: el.querySelector('.lab-graph'), side: el.querySelector('.lab-side'), el: el };
+  }
+  /* Laboratoire paramétrable : des courbes définies par une expression avec paramètres (a, b, k...),
+     des curseurs, un affichage de résultats. cfg = {title, sub, params:[{k,label,min,max,step,val}],
+     curves:[{expr,color,dashed}], win:[xmin,xmax,ymin,ymax], readout(vals,F)->html, extra(g,vals,F), presets:[{name,vals}] } */
+  function paramLab(rootId, cfg) {
+    var L = makeLab(rootId, cfg.title, cfg.sub);
+    var names = cfg.params.map(function (p) { return p.k; });
+    var fns = cfg.curves.map(function (c) { return FX.compile(c.expr, names); });
+    var vals = {}; cfg.params.forEach(function (p) { vals[p.k] = p.val; });
+    var g = new FX.Graph(L.graph, { xmin: cfg.win[0], xmax: cfg.win[1], ymin: cfg.win[2], ymax: cfg.win[3], label: cfg.label || cfg.title });
+    var out = h('<div class="readout" aria-live="polite"></div>');
+    var sliders = {};
+    if (cfg.presets) {
+      L.side.appendChild(select(rootId + '-pre', 'Exemples', cfg.presets.map(function (p) { return p.name; }), function (i) {
+        var v = cfg.presets[i].vals; Object.keys(v).forEach(function (k) { if (sliders[k]) sliders[k].set(v[k]); });
+      }));
+    }
+    function draw() {
+      g.clear();
+      cfg.curves.forEach(function (c, i) { g.curve(function (x) { return fns[i](x, vals); }, c.color || '#3459e8', { dashed: c.dashed }); });
+      var F = function (i) { return function (x) { return fns[i](x, vals); }; };
+      if (cfg.extra) cfg.extra(g, vals, F);
+      out.innerHTML = cfg.readout ? cfg.readout(vals, F) : '';
+    }
+    cfg.params.forEach(function (p) {
+      var sl = slider(rootId + '-' + p.k, p.label || p.k, p.min, p.max, p.step, p.val, function (v) { vals[p.k] = v; draw(); });
+      sliders[p.k] = sl; L.side.appendChild(sl);
+    });
+    L.side.appendChild(out);
+    draw();
+    return { lab: L, graph: g, vals: vals, redraw: draw };
+  }
+
+  return { makeLab: makeLab, paramLab: paramLab, exercises: exercises, variationTable: variationTable, solveIneq: solveIneq, slider: slider, select: select, checklist: checklist, h: h, esc: esc, load: load, save: save, readNumber: readNumber };
 });
