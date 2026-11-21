@@ -32,11 +32,11 @@
     var L = Mini.makeLab('lab1', '1. Le cercle : cos est l’abscisse, sin est l’ordonnée', 'angle, radian, point image');
     var g = unitCircle(L.graph, 'Cercle trigonométrique avec point mobile');
     var out = h('<div class="readout" aria-live="polite"></div>');
-    var sl, sel;
+    var sl, sel, sync1;
     var marks = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330, 360];
     function draw(d) {
       var t = d * PI / 180, c = Math.cos(t), s = Math.sin(t);
-      g.clear(); drawCircle(g);
+      g.clear(); drawCircle(g); if (sync1) sync1();
       marks.forEach(function (m) { g.point(Math.cos(m * PI / 180), Math.sin(m * PI / 180), '#c5cde0', { r: 3 }); });
       g.line(0, 0, c, s, PURPLE, { width: 2.4 });
       g.line(c, 0, c, s, ORANGE, { width: 2.6, dashed: true });
@@ -52,6 +52,7 @@
     }
     sl = Mini.slider('c-ang', 'Angle (degrés) =', 0, 360, 5, 60, function (v) { draw(v); });
     sel = Mini.select('c-pre', 'Angle remarquable', ['Choisir…'].concat(marks.map(function (m) { return m + '° = ' + radText(m); })), function (i) { if (i > 0) sl.set(marks[i - 1]); });
+    sync1 = Mini.dragSliders(g, 'M', [sl], { color: PURPLE, pos: function (v) { var t = v[0] * PI / 180; return { x: Math.cos(t), y: Math.sin(t) }; }, vals: function (x, y) { var d = Math.atan2(y, x) * 180 / PI; return [d < 0 ? d + 360 : d]; }, move: function (x, y) { var n = Math.hypot(x, y) || 1; return { x: x / n, y: y / n }; } });
     L.side.appendChild(sl); L.side.appendChild(sel); L.side.appendChild(out);
     draw(60);
   })();
@@ -61,16 +62,19 @@
     var L = Mini.makeLab('lab2', '2. Du cercle aux courbes de cos et sin', 'chaque point du cercle donne un point de chaque courbe');
     var g = new FX.Graph(L.graph, { xmin: -0.5, xmax: 6.9, ymin: -1.5, ymax: 1.5, label: 'Courbes de cosinus et sinus avec point mobile' });
     var out = h('<div class="readout" aria-live="polite"></div>');
+    var sl2, sync2;
     function draw(d) {
       var x = d * PI / 180;
-      g.clear();
+      g.clear(); if (sync2) sync2();
       [PI / 2, PI, 3 * PI / 2, TAU].forEach(function (k, i) { g.line(k, -1.5, k, 1.5, '#dfe5f2', { dashed: true }); g.label(k, -1.28, ['π/2', 'π', '3π/2', '2π'][i], '#53617a', { dx: -6, dy: 0 }); });
       g.curve(Math.cos, BLUE); g.curve(Math.sin, ORANGE);
       g.line(x, 0, x, Math.cos(x), BLUE, { dashed: true }); g.line(x, 0, x, Math.sin(x), ORANGE, { dashed: true });
       g.point(x, Math.cos(x), BLUE, { r: 5 }); g.point(x, Math.sin(x), ORANGE, { r: 5 });
       out.innerHTML = 'x = <b class="mono">' + radText(d) + '</b> ≈ ' + r3(x) + '<br><span style="color:' + BLUE + '">cos x (bleu) = <b class="mono">' + r3(Math.cos(x)) + '</b></span><br><span style="color:' + ORANGE + '">sin x (orange) = <b class="mono">' + r3(Math.sin(x)) + '</b></span><br>Les deux courbes oscillent entre −1 et 1 et se répètent tous les 2π. La courbe orange est la bleue décalée de π/2 vers la droite : sin x = cos(x − π/2).';
     }
-    L.side.appendChild(Mini.slider('c2-ang', 'x (degrés) =', 0, 360, 5, 60, draw)); L.side.appendChild(out);
+    sl2 = Mini.slider('c2-ang', 'x (degrés) =', 0, 360, 5, 60, draw);
+    sync2 = Mini.dragSliders(g, 'x', [sl2], { color: ORANGE, pos: function (v) { var x = v[0] * PI / 180; return { x: x, y: Math.sin(x) }; }, vals: function (x) { return [x * 180 / PI]; }, move: function (x) { return { x: x, y: Math.sin(x) }; } });
+    L.side.appendChild(sl2); L.side.appendChild(out);
     draw(60);
   })();
 
@@ -126,7 +130,7 @@
     var L = Mini.makeLab('lab5', '5. Résoudre cos x = a ou sin x = a', 'sur [0 ; 2π]');
     var g = new FX.Graph(L.graph, { xmin: -0.3, xmax: 6.6, ymin: -1.5, ymax: 1.5, label: 'Résolution graphique de cos x = a ou sin x = a' });
     var out = h('<div class="readout" aria-live="polite"></div>');
-    var which = 0, a = 0.5;
+    var which = 0, a = 0.5, sync5;
     function sols() {
       var al, r = [];
       if (which === 0) { al = Math.acos(a); r = [al, TAU - al]; }
@@ -138,7 +142,7 @@
     function nice(v) { var d = Math.round(v * 180 / PI * 1e6) / 1e6; return Math.abs(d - Math.round(d)) < 1e-6 && EXACT[Math.round(d)] ? radText(Math.round(d)) : r3(v); }
     function draw() {
       var f = which === 0 ? Math.cos : Math.sin, col = which === 0 ? BLUE : ORANGE, S = sols();
-      g.clear();
+      g.clear(); if (sync5) sync5();
       [PI / 2, PI, 3 * PI / 2, TAU].forEach(function (k, i) { g.line(k, -1.5, k, 1.5, '#e8ecf6', { dashed: true }); g.label(k, -1.3, ['π/2', 'π', '3π/2', '2π'][i], '#53617a', { dx: -6, dy: 0 }); });
       g.curve(f, col, { from: 0, to: TAU });
       g.line(-0.3, a, 6.6, a, PURPLE, { width: 2 });
@@ -150,7 +154,9 @@
     }
     var sel = Mini.select('c5-f', 'Équation', ['cos x = a', 'sin x = a'], function (i) { which = i; draw(); });
     L.side.appendChild(sel);
-    L.side.appendChild(Mini.slider('c5-a', 'Valeur a =', -1, 1, 0.05, 0.5, function (v) { a = v; draw(); }));
+    var asl5 = Mini.slider('c5-a', 'Valeur a =', -1, 1, 0.05, 0.5, function (v) { a = v; draw(); });
+    sync5 = Mini.dragSlider(g, 'a', asl5, { color: PURPLE, pos: function (v) { return { x: 6.3, y: v }; }, val: function (x, y) { return y; }, move: function (x, y) { return { x: 6.3, y: Math.max(-1, Math.min(1, y)) }; } });
+    L.side.appendChild(asl5);
     L.side.appendChild(out);
     draw();
   })();

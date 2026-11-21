@@ -31,13 +31,15 @@
     var L = Mini.makeLab('lab2', '2. La tangente a la pente eˣ', '(eˣ)′ = eˣ');
     var g = new FX.Graph(L.graph, { xmin: -3, xmax: 3, ymin: -1, ymax: 9, label: 'Courbe exponentielle et tangente mobile' });
     var out = h('<div class="readout" aria-live="polite"></div>');
+    var syncE;
     var sl = Mini.slider('p-x', 'Abscisse x =', -3, 2.2, 0.05, 1, function (x) {
-      g.clear(); g.curve(Math.exp, BLUE);
+      g.clear(); g.curve(Math.exp, BLUE); if (syncE) syncE(x);
       var y = Math.exp(x);
       g.slope(x, y, y, ORANGE, { width: 2.2 }); g.point(x, y, ORANGE); g.line(x, 0, x, y, '#8b96b0', { dashed: true });
       g.label(x, y / 2, 'hauteur ' + r2(y), '#53617a', { dx: 8, dy: 0 });
       out.innerHTML = 'Hauteur de la courbe : <b class="mono">' + r3(y) + '</b><br>Pente de la tangente : <b class="mono">' + r3(y) + '</b><br>Les deux nombres sont égaux : c’est (eˣ)′ = eˣ. Quand x est très négatif, la courbe est presque plate : la pente est petite parce que la hauteur l’est.';
     });
+    syncE = Mini.dragSlider(g, 'x', sl, { color: ORANGE, pos: function (v) { return { x: v, y: Math.min(g.ymax, Math.exp(v)) }; }, val: function (x) { return x; } });
     L.side.appendChild(sl); L.side.appendChild(out);
   })();
 
@@ -47,6 +49,7 @@
     params: [{ k: 'k', label: 'Facteur k =', min: -3, max: 3, step: 0.1, val: 1 }, { k: 'r', label: 'Taux r =', min: -2, max: 2, step: 0.1, val: 1 }],
     curves: [{ expr: 'k*e^(r*x)', color: BLUE }, { expr: 'k*r*e^(r*x)', color: PURPLE, dashed: true }],
     win: [-3, 3, -6, 8],
+    handles: [{ id: 'k', color: ORANGE, params: ['k'], pos: function (v) { return { x: 0, y: v.k }; }, vals: function (x, y) { return [y]; }, move: function (x, y) { return { x: 0, y: y }; } }, { id: 'r', color: GREEN, params: ['r'], pos: function (v) { return v.k === 0 ? null : { x: 1, y: v.k * Math.exp(v.r) }; }, vals: function (x, y, v) { var q = y / v.k; return [q > 0 ? Math.log(q) : (y > 0 === v.k > 0 ? -2 : 0)]; }, move: function (x, y) { return { x: 1, y: y }; } }],
     presets: [{ name: 'Croissance : e^x', vals: { k: 1, r: 1 } }, { name: 'Décroissance : e^(−x)', vals: { k: 1, r: -1 } }, { name: 'Rapide : 0,5·e^(2x)', vals: { k: 0.5, r: 2 } }, { name: 'Négative : −e^(0,5x)', vals: { k: -1, r: 0.5 } }],
     readout: function (v) {
       var dir = v.k === 0 || v.r === 0 ? 'constante' : (v.k * v.r > 0 ? 'croissante' : 'décroissante');

@@ -366,13 +366,15 @@
     g.ymin = o.ymin === undefined ? -4 : o.ymin; g.ymax = o.ymax === undefined ? 4 : o.ymax;
     g.W = W; g.H = H; g.pad = pad;
     g.svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'fx-graph', role: 'img', 'aria-label': o.label || 'graphique' });
-    g.layerGrid = el('g', {}, g.svg); g.layerCurves = el('g', {}, g.svg); g.layerTop = el('g', {}, g.svg);
+    g.layerGrid = el('g', {}, g.svg); g.layerCurves = el('g', {}, g.svg); g.layerTop = el('g', {}, g.svg); g.layerTrace = el('g', {'pointer-events': 'none'}, g.svg); g.layerHandles = el('g', {}, g.svg);
+    g._curves = []; g._handles = {}; g._drag = null; g.trace = o.trace !== false;
     container.appendChild(g.svg);
     g.sx = function (x) { return pad + (x - g.xmin) / (g.xmax - g.xmin) * (W - 2 * pad); };
     g.sy = function (y) { return H - pad - (y - g.ymin) / (g.ymax - g.ymin) * (H - 2 * pad); };
     g.ix = function (px) { return g.xmin + (px - pad) / (W - 2 * pad) * (g.xmax - g.xmin); };
     g.iy = function (py) { return g.ymin + (H - pad - py) / (H - 2 * pad) * (g.ymax - g.ymin); };
     g.grid();
+    g._bind();
   }
   Graph.prototype.clientToX = function (evt) {
     var r = this.svg.getBoundingClientRect();
@@ -396,7 +398,8 @@
     if (g.xmin <= 0 && g.xmax >= 0) el('line', { x1: g.sx(0), x2: g.sx(0), y1: g.sy(g.ymin), y2: g.sy(g.ymax), class: 'fx-axis' }, L);
   };
   Graph.prototype.clear = function () {
-    [this.layerCurves, this.layerTop].forEach(function (L) { while (L.firstChild) L.removeChild(L.firstChild); });
+    this._curves = []; this._traceX = null;
+    [this.layerCurves, this.layerTop, this.layerTrace].forEach(function (L) { while (L.firstChild) L.removeChild(L.firstChild); });
   };
   Graph.prototype.view = function (xmin, xmax, ymin, ymax) {
     this.xmin = xmin; this.xmax = xmax; this.ymin = ymin; this.ymax = ymax; this.grid();
@@ -413,6 +416,7 @@
       d += (pen ? 'L' : 'M') + g.sx(x).toFixed(1) + ' ' + g.sy(y).toFixed(1);
       pen = true; prevY = y;
     }
+    if (!o.noTrace) g._curves.push({ f: f, color: color || '#3459e8', from: a, to: b });
     return el('path', { d: d, class: 'fx-curve' + (o.dashed ? ' fx-dashed' : ''), stroke: color || '#3459e8', fill: 'none', 'stroke-width': o.width || 2.6 }, g.layerCurves);
   };
   Graph.prototype.point = function (x, y, color, o) {
@@ -454,6 +458,78 @@
   Graph.prototype.rect = function (x1, x2, y1, y2, color, o) {
     o = o || {};
     return el('rect', { x: this.sx(x1), y: this.sy(Math.max(y1, y2)), width: Math.abs(this.sx(x2) - this.sx(x1)), height: Math.abs(this.sy(y1) - this.sy(y2)), fill: color || '#3459e8', opacity: o.opacity || 0.12 }, this.layerCurves);
+  };
+
+  /* ---- Interaction directe : trace au doigt ou à la souris, poignées déplaçables ---- */
+  Graph.prototype._pt = function (evt) {
+    var r = this.svg.getBoundingClientRect();
+    return { px: (evt.clientX - r.left) / r.width * this.W, py: (evt.clientY - r.top) / r.height * this.H };
+  };
+  // poignée déplaçable : g.handle('k', {x, y, color, move(x,y) -> {x,y} | null, drag(x,y), r})
+  // move contraint la position (par exemple rester sur la courbe), drag est appelé à chaque déplacement.
+  Graph.prototype.handle = function (id, o) {
+    var g = this, h = g._handles[id];
+    if (!h) { h = g._handles[id] = { id: id, halo: el('circle', { r: 17, class: 'fx-halo' }, g.layerHandles), dot: el('circle', { r: 8, class: 'fx-handle', 'stroke-width': 2.5 }, g.layerHandles) }; g.svg.classList.add('fx-has-handle'); if (!g._hint && g.svg.parentNode) { g._hint = document.createElement('p'); g._hint.className = 'fx-hint'; g._hint.textContent = 'Glisse les points cerclés directement sur le graphique, ou touche la courbe pour lire les coordonnées.'; g.svg.parentNode.insertBefore(g._hint, g.svg.nextSibling); } }
+    Object.keys(o).forEach(function (k) { h[k] = o[k]; });
+    var col = h.color || '#da681e';
+    h.halo.setAttribute('fill', col); h.dot.setAttribute('stroke', col); h.dot.setAttribute('fill', '#fff');
+    ['halo', 'dot'].forEach(function (n) { h[n].setAttribute('cx', g.sx(h.x)); h[n].setAttribute('cy', g.sy(h.y)); });
+    h.halo.setAttribute('visibility', h.hidden ? 'hidden' : 'visible'); h.dot.setAttribute('visibility', h.hidden ? 'hidden' : 'visible');
+    return h;
+  };
+  Graph.prototype._bind = function () {
+    var g = this, svg = g.svg;
+    function nearestHandle(p) {
+      var best = null, bd = 26 * 26;
+      Object.keys(g._handles).forEach(function (k) {
+        var h = g._handles[k]; if (h.hidden) return;
+        var dx = g.sx(h.x) - p.px, dy = g.sy(h.y) - p.py, d = dx * dx + dy * dy;
+        if (d < bd) { bd = d; best = h; }
+      });
+      return best;
+    }
+    function drawTrace(p) {
+      var L = g.layerTrace; while (L.firstChild) L.removeChild(L.firstChild);
+      if (!g.trace || !g._curves.length) return;
+      var x = g.ix(p.px); if (x < g.xmin || x > g.xmax) return;
+      el('line', { x1: g.sx(x), x2: g.sx(x), y1: g.sy(g.ymin), y2: g.sy(g.ymax), class: 'fx-trace' }, L);
+      var shown = 0, lines = [], cy = g.iy(p.py);
+      var cs = g._curves.slice().sort(function (a, b) { return Math.abs(a.f(x) - cy) - Math.abs(b.f(x) - cy); });
+      cs.forEach(function (c) {
+        if (x < c.from || x > c.to) return;
+        var y = c.f(x); if (!isFinite(y) || y < g.ymin - 1e-9 || y > g.ymax + 1e-9) return;
+        el('circle', { cx: g.sx(x), cy: g.sy(y), r: 5, fill: '#fff', stroke: c.color, 'stroke-width': 2.4 }, L);
+        if (shown++ < 2) lines.push(['(' + fmtNum(Math.round(x * 100) / 100) + ' ; ' + fmtNum(Math.round(y * 100) / 100) + ')', c.color, y]);
+      });
+      lines.forEach(function (l, i) {
+        var right = g.sx(x) < g.W * 0.62, t = el('text', { x: g.sx(x) + (right ? 10 : -10), y: Math.max(16, Math.min(g.H - 8, g.sy(l[2]) - 10 - i * 16)), 'text-anchor': right ? 'start' : 'end', class: 'fx-label fx-tracetxt', fill: l[1] }, L);
+        t.textContent = l[0];
+      });
+    }
+    svg.addEventListener('pointerdown', function (e) {
+      var p = g._pt(e), h = nearestHandle(p);
+      if (h) { g._drag = h; svg.setPointerCapture(e.pointerId); e.preventDefault(); h.dot.setAttribute('r', 10); }
+      else if (g.trace && e.pointerType !== 'mouse') { g._tracing = true; svg.setPointerCapture(e.pointerId); drawTrace(p); }
+    });
+    svg.addEventListener('pointermove', function (e) {
+      var p = g._pt(e);
+      if (g._drag) {
+        var h = g._drag, x = g.ix(p.px), y = g.iy(p.py);
+        x = Math.min(g.xmax, Math.max(g.xmin, x)); y = Math.min(g.ymax, Math.max(g.ymin, y));
+        if (h.move) { var r = h.move(x, y); if (!r) return; x = r.x; y = r.y; }
+        g.handle(h.id, { x: x, y: y }); if (h.drag) h.drag(x, y); e.preventDefault(); return;
+      }
+      if (e.pointerType === 'mouse') {
+        svg.style.cursor = nearestHandle(p) ? 'grab' : (g.trace && g._curves.length ? 'crosshair' : '');
+        drawTrace(p);
+      } else if (g._tracing) drawTrace(p);
+    });
+    function end(e) {
+      if (g._drag) { g._drag.dot.setAttribute('r', 8); g._drag = null; }
+      if (g._tracing) { g._tracing = false; var L = g.layerTrace; setTimeout(function () { if (!g._tracing) while (L.firstChild) L.removeChild(L.firstChild); }, 1800); }
+    }
+    svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+    svg.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && !g._drag) { var L = g.layerTrace; while (L.firstChild) L.removeChild(L.firstChild); } });
   };
 
   return {

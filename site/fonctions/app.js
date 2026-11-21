@@ -28,11 +28,15 @@
     var sel = Mini.select('m-sel', 'Choisis une fonction', presets.map(function (p) { return 'f(x) = ' + p.name; }), function (i) { cur = presets[i]; f = FX.compile(cur.f); newGraph(); draw(); });
     var sl = Mini.slider('m-x', 'Entrée x =', -5, 7, 0.1, 2, function (v) { xval = v; draw(); });
     L.side.appendChild(sel); L.side.appendChild(sl); L.side.appendChild(out); L.side.appendChild(dom);
-    function newGraph() { L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Courbe de la fonction choisie' }); }
+    var sync;
+    function newGraph() {
+      L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Courbe de la fonction choisie' });
+      sync = Mini.dragSlider(g, 'x', sl, { color: ORANGE, pos: function (v) { var y = f(v); return { x: v, y: isFinite(y) ? Math.max(g.ymin, Math.min(g.ymax, y)) : 0 }; }, val: function (x) { return x; } });
+    }
     function draw() {
       if (!g) return;
       g.clear(); g.curve(f, BLUE);
-      var y = f(xval);
+      var y = f(xval); sync(xval);
       dom.innerHTML = 'Ensemble de définition : <b>' + cur.dom + '</b>';
       if (isFinite(y)) {
         g.line(xval, 0, xval, y, ORANGE, { dashed: true }); g.line(g.xmin, y, xval, y, ORANGE, { dashed: true }); g.point(xval, y, ORANGE);
@@ -62,12 +66,16 @@
     var ksl = Mini.slider('r-k', 'Valeur de k =', -5, 6, 0.1, 1, function (v) { k = v; draw(); });
     chips.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; mode = b.dataset.m; chips.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); draw(); });
     L.side.appendChild(sel); L.side.appendChild(chips); L.side.appendChild(ksl); L.side.appendChild(out);
-    function newGraph() { L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Courbe et droite horizontale y = k' }); draw(); }
+    function newGraph() { L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Courbe et droite horizontale y = k' });
+      var hx = g.xmin + (g.xmax - g.xmin) * 0.9;
+      sync = Mini.dragSlider(g, 'k', ksl, { color: ORANGE, pos: function (v) { return { x: hx, y: v }; }, val: function (x, y) { return y; }, move: function (x, y) { return { x: hx, y: y }; } });
+      draw(); }
+    var sync;
     function interval(a, b) { return ']' + r2(a) + ' ; ' + r2(b) + '['; }
     function draw() {
       if (!g) return;
       g.clear(); g.curve(f, BLUE);
-      g.line(g.xmin, k, g.xmax, k, ORANGE);
+      g.line(g.xmin, k, g.xmax, k, ORANGE); sync(k);
       g.label(g.xmin + 0.1, k, 'y = ' + r2(k), ORANGE, { dy: -6 });
       if (mode === 'eq') {
         var rts = FX.roots(function (x) { return f(x) - k; }, g.xmin, g.xmax, 1500);

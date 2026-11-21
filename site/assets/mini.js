@@ -152,6 +152,32 @@
     w.input = inp; w.set = function (v) { inp.value = v; upd(); };
     return w;
   }
+  /* Lie une poignée du graphique à un curseur : glisser la poignée règle le curseur, le curseur déplace la poignée.
+     o = {pos(v) -> {x,y} | null, val(x,y) -> valeur, color}. Renvoie sync(v), à appeler dans le dessin. */
+  function dragSlider(g, id, sl, o) {
+    var inp = sl.input;
+    function snap(v) { var min = +inp.min, max = +inp.max, step = +inp.step || 1; v = Math.round((v - min) / step) * step + min; return Math.min(max, Math.max(min, Math.round(v * 1e6) / 1e6)); }
+    function sync(v) {
+      if (v === undefined) v = +inp.value;
+      var p = o.pos(v);
+      g.handle(id, { x: p ? p.x : 0, y: p ? p.y : 0, hidden: !p, color: o.color, move: o.move, drag: function (x, y) { sl.set(snap(o.val(x, y))); } });
+    }
+    sync(+inp.value);
+    return sync;
+  }
+  /* Poignée liée à plusieurs curseurs : o = {pos(vals) -> {x,y} | null, vals(x,y) -> [valeurs], color, move}. Renvoie sync(). */
+  function dragSliders(g, id, sls, o) {
+    function snap(inp, v) { var min = +inp.min, max = +inp.max, step = +inp.step || 1; v = Math.round((v - min) / step) * step + min; return Math.min(max, Math.max(min, Math.round(v * 1e6) / 1e6)); }
+    function cur() { return sls.map(function (s) { return +s.input.value; }); }
+    function sync() {
+      var p = o.pos(cur());
+      g.handle(id, { x: p ? p.x : 0, y: p ? p.y : 0, hidden: !p, color: o.color, move: o.move, drag: function (x, y) {
+        var v = o.vals(x, y, cur()); sls.forEach(function (s, i) { if (v[i] !== undefined && v[i] !== null) s.input.value = snap(s.input, v[i]); });
+        sls.forEach(function (s, i) { if (v[i] !== undefined && v[i] !== null) s.set(+s.input.value); });
+      } });
+    }
+    sync(); return sync;
+  }
   function select(id, label, options, onChange) {
     var w = h('<label class="sel"><span>' + label + '</span><select id="' + id + '">' + options.map(function (o, i) { return '<option value="' + i + '">' + o + '</option>'; }).join('') + '</select></label>');
     var s = w.querySelector('select');
@@ -190,8 +216,9 @@
         var v = cfg.presets[i].vals; Object.keys(v).forEach(function (k) { if (sliders[k]) sliders[k].set(v[k]); });
       }));
     }
+    var syncs = [];
     function draw() {
-      g.clear();
+      g.clear(); syncs.forEach(function (f) { f(); });
       cfg.curves.forEach(function (c, i) { g.curve(function (x) { return fns[i](x, vals); }, c.color || '#3459e8', { dashed: c.dashed }); });
       var F = function (i) { return function (x) { return fns[i](x, vals); }; };
       if (cfg.extra) cfg.extra(g, vals, F);
@@ -201,10 +228,14 @@
       var sl = slider(rootId + '-' + p.k, p.label || p.k, p.min, p.max, p.step, p.val, function (v) { vals[p.k] = v; draw(); });
       sliders[p.k] = sl; L.side.appendChild(sl);
     });
+    /* poignées glissables : cfg.handles = [{id, color, params:['b','c'], pos(vals) -> {x,y}|null, vals(x, y, vals) -> [valeurs dans l'ordre de params]}] */
+    (cfg.handles || []).forEach(function (hd) {
+      syncs.push(dragSliders(g, hd.id, hd.params.map(function (k) { return sliders[k]; }), { color: hd.color, move: hd.move, pos: function () { return hd.pos(vals); }, vals: function (x, y) { return hd.vals(x, y, vals); } }));
+    });
     L.side.appendChild(out);
     draw();
     return { lab: L, graph: g, vals: vals, redraw: draw };
   }
 
-  return { makeLab: makeLab, paramLab: paramLab, exercises: exercises, variationTable: variationTable, solveIneq: solveIneq, slider: slider, select: select, checklist: checklist, h: h, esc: esc, load: load, save: save, readNumber: readNumber };
+  return { makeLab: makeLab, paramLab: paramLab, exercises: exercises, variationTable: variationTable, solveIneq: solveIneq, slider: slider, dragSlider: dragSlider, dragSliders: dragSliders, select: select, checklist: checklist, h: h, esc: esc, load: load, save: save, readNumber: readNumber };
 });
