@@ -13,11 +13,13 @@ const DCE = require('../site/droites-cercles/content.js');
 const PRB = require('../site/probabilites/content.js');
 const VAR = require('../site/variables-aleatoires/content.js');
 const STA = require('../site/statistiques/content.js');
+const PYT = require('../site/python/content.js');
+import { execFileSync } from 'node:child_process';
 let fail = 0; const ok = (c, m) => { if (!c) { fail++; console.log('ECHEC', m); } };
 const by = (L, id) => L.find(e => e.id === id);
 
 // structure
-for (const [name, L] of [['fonctions', FONC], ['derivation', DER], ['exponentielle', EXP], ['trigonometrie', TRI], ['suites', SUI], ['polynomes', POL], ['produit-scalaire', PSC], ['droites-cercles', DCE], ['probabilites', PRB], ['variables-aleatoires', VAR], ['statistiques', STA]]) {
+for (const [name, L] of [['fonctions', FONC], ['derivation', DER], ['exponentielle', EXP], ['trigonometrie', TRI], ['suites', SUI], ['polynomes', POL], ['produit-scalaire', PSC], ['droites-cercles', DCE], ['probabilites', PRB], ['variables-aleatoires', VAR], ['statistiques', STA], ['python', PYT]]) {
   const ids = new Set();
   for (const e of L) {
     ok(!ids.has(e.id), `${name}: id en double ${e.id}`); ids.add(e.id);
@@ -239,5 +241,13 @@ ok(by(EXP, 'e16').answer === 0 && Math.abs(FX.numDiff(f('e^x*e^(-x)'), 0.7)) < 1
   ok(c(mean([1, 2, 2, 3, 100]), A('st12')) && by(STA, 'st13').answer === 0 && Math.ceil(37 / 4) === A('st14'), 'st12-14');
 }
 
-console.log(fail ? fail + ' échec(s)' : 'contenu d\'exercices : tout est cohérent (' + (FONC.length + DER.length + EXP.length + TRI.length + SUI.length + POL.length + PSC.length + DCE.length + PRB.length + VAR.length + STA.length) + ' exercices)');
+// Python : on exécute réellement le code de chaque exercice
+for (const ex of PYT) {
+  if (!ex.py) continue;
+  let out = '';
+  try { out = execFileSync('python3', ['-I', '-c', ex.py], { encoding: 'utf8', timeout: 10000 }).trim(); } catch (e) { ok(false, `${ex.id}: erreur Python ${e.message}`); continue; }
+  ok(Math.abs(parseFloat(out) - ex.answer) < 1e-9, `${ex.id}: Python affiche ${out}, réponse ${ex.answer}`);
+}
+
+console.log(fail ? fail + ' échec(s)' : 'contenu d\'exercices : tout est cohérent (' + (FONC.length + DER.length + EXP.length + TRI.length + SUI.length + POL.length + PSC.length + DCE.length + PRB.length + VAR.length + STA.length + PYT.length) + ' exercices)');
 process.exit(fail ? 1 : 0);
