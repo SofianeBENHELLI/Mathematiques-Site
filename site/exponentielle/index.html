@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exponentielle : la fonction égale à sa dérivée | Les maths de Sanaa</title>
+<meta name="description" content="La fonction exponentielle, de sa définition f′ = f à ses propriétés, sa dérivée, ses variations et les équations : cours, ateliers interactifs et exercices corrigés pour la Première spécialité.">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/mini.css">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Maths Sanaa"><meta name="theme-color" content="#3459e8"></head>
+<body>
+<div class="dedication">Pour Sanaa <span>✦</span> une fonction qui se dérive en elle-même</div>
+<header><a class="brand" href="#essentiel">exponentielle<span>eˣ</span></a><span>LE LABO DE SANAA</span><button id="reset" type="button">↺ Réinitialiser</button></header>
+<div id="sitenav" data-current="exponentielle"></div>
+<div class="navwrap"><strong id="sticky-formula">(eˣ)′ = eˣ</strong>
+<nav aria-label="Chapitres"><a href="#essentiel">Essentiel</a><a href="#ateliers">Ateliers</a><a href="#exercices">Exercices</a></nav></div>
+<main>
+<section class="hero"><div><p class="eyebrow">PREMIÈRE SPÉCIALITÉ · EXPONENTIELLE</p>
+<h1>Une fonction qui est <em>sa propre pente.</em></h1>
+<p>Tu vas la construire pas à pas, comprendre pourquoi elle transforme les sommes en produits, et apprendre à l'étudier sans te tromper de signe.</p></div>
+<div class="hero-note"><span>TON PARCOURS</span><b>Construire → propriétés → dériver → étudier → résoudre</b><p>Chaque règle a son atelier : regarde d'abord, retiens ensuite.</p></div></section>
+
+<section id="essentiel"><div class="section-heading"><span>01 / L'ESSENTIEL</span><h2>Six idées à posséder.</h2></div>
+<details class="course" open><summary>▤ 1. Définition : f′ = f et f(0) = 1<span>+</span></summary><div>
+<p class="formula">Il existe une unique fonction f dérivable sur ℝ telle que f′ = f et f(0) = 1. On la note <b>exp</b>, et on écrit exp(x) = eˣ, avec e = exp(1) ≈ 2,718.</p>
+<p>Cela veut dire que <b>la pente de la courbe en chaque point est égale à sa hauteur</b>. Plus la courbe est haute, plus elle monte vite : c'est une croissance « proportionnelle à elle-même ». L'existence de cette fonction est admise ; l'atelier 1 en montre une construction approchée.</p></div></details>
+
+<details class="course"><summary>▤ 2. Propriétés algébriques<span>+</span></summary><div>
+<p class="formula">e⁰ = 1 &nbsp; e¹ = e<br>eˣ⁺ʸ = eˣ·eʸ &nbsp; e⁻ˣ = 1/eˣ &nbsp; eˣ⁻ʸ = eˣ/eʸ &nbsp; (eˣ)ⁿ = eⁿˣ</p>
+<p>La relation fondamentale eˣ⁺ʸ = eˣ·eʸ transforme une <b>somme</b> en <b>produit</b>, comme les puissances.</p>
+<p class="key">Pour tout réel x : <b>eˣ &gt; 0</b>. L'exponentielle ne s'annule jamais et n'est jamais négative.</p></div></details>
+
+<details class="course"><summary>▤ 3. Variations et courbe<span>+</span></summary><div>
+<p>Comme (eˣ)′ = eˣ &gt; 0, la fonction exponentielle est <b>strictement croissante</b> sur ℝ. Sa courbe passe par (0 ; 1), reste au-dessus de l'axe des abscisses, et sa tangente en 0 a pour équation <b>y = x + 1</b>.</p>
+<p>Conséquence : eᵃ = eᵇ ⇔ a = b, et eᵃ &lt; eᵇ ⇔ a &lt; b. On compare les exposants sans changer le sens.</p></div></details>
+
+<details class="course"><summary>▤ 4. Dériver avec l'exponentielle<span>+</span></summary><div>
+<p class="formula">(e^(ax+b))′ = a·e^(ax+b)<br>(uv)′ = u′v + uv′ &nbsp;&nbsp; (u/v)′ = (u′v − uv′)/v²</p>
+<p>Exemples : (e²ˣ)′ = 2e²ˣ ; (x·eˣ)′ = eˣ + x·eˣ = (1 + x)eˣ. <b>Réflexe :</b> factoriser par l'exponentielle, qui est positive, pour que le signe de la dérivée ne dépende que de l'autre facteur.</p>
+<p class="trap"><b>Piège.</b> (e^(2x))′ n'est pas e^(2x) : il faut multiplier par 2. Et (eˣ)ⁿ se dérive comme e^(nx), pas comme xⁿ.</p></div></details>
+
+<details class="course"><summary>▤ 5. Équations, inéquations, suites géométriques<span>+</span></summary><div>
+<p>Pour résoudre, on ramène à une comparaison d'exposants : e^(2x−1) = e^(x+3) ⇔ 2x − 1 = x + 3. Pour une équation de la forme e²ˣ − eˣ = 0, on factorise : eˣ(eˣ − 1) = 0, et comme eˣ &gt; 0, il reste eˣ = 1 = e⁰.</p>
+<p><b>Lien avec les suites.</b> La suite uₙ = e^(an) vérifie uₙ₊₁/uₙ = eᵃ : c'est une suite géométrique de raison eᵃ. C'est le même phénomène de croissance (si a &gt; 0) ou de décroissance (si a &lt; 0), discret ou continu.</p></div></details>
+
+<details class="course demo"><summary>▤ 6. Démonstrations exigibles<span>+</span></summary><div>
+<p><b>eˣ ne s'annule pas.</b> Soit φ(x) = eˣ·e⁻ˣ. Alors φ′(x) = eˣe⁻ˣ − eˣe⁻ˣ = 0, donc φ est constante, égale à φ(0) = 1. Ainsi eˣ·e⁻ˣ = 1 : eˣ ne vaut jamais 0 et e⁻ˣ = 1/eˣ.</p>
+<p><b>eˣ⁺ʸ = eˣ·eʸ.</b> Fixons y et posons g(x) = eˣ⁺ʸ / eʸ. Alors g′ = g et g(0) = 1. Par unicité de la fonction qui vérifie f′ = f et f(0) = 1, g(x) = eˣ, soit eˣ⁺ʸ = eˣ·eʸ.</p></div></details>
+</section>
+
+<section id="ateliers"><div class="section-heading"><span>02 / MANIPULER</span><h2>Cinq ateliers.</h2></div>
+<div id="lab1"></div><div id="lab2"></div><div id="lab3"></div><div id="lab4"></div><div id="lab5"></div></section>
+
+<section id="exercices"><div class="section-heading"><span>03 / S'ENTRAÎNER</span><h2>Seize exercices corrigés.</h2></div>
+<p>Niveau ★ : réflexe. ★★ : application directe. ★★★ : raisonnement et rédaction.</p>
+<div id="exos"></div>
+<details class="panel"><summary>Ma checklist de révision <span>+</span></summary><div id="checklist" class="panel-body"></div></details></section>
+<footer><b>Fait pour Sanaa, avec confiance en sa réussite.</b><p>Exponentielle · Première générale, spécialité mathématiques. Les ateliers illustrent, ils ne remplacent pas une démonstration.</p></footer>
+</main>
+<script src="../assets/fx.js"></script><script src="../assets/mini.js"></script><script src="content.js"></script><script src="app.js"></script><script src="/assets/nav.js"></script><script src="/assets/pwa.js"></script>
+</body></html>

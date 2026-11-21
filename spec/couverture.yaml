@@ -45,3 +45,19 @@ couverture:
   P-ALG-SUI-04: {module: suites, niveau: complet}
   P-ALG-SUI-07: {module: suites, niveau: complet}
   P-ANA-EXP-05: {module: derivation, niveau: partiel}
+  # Exponentielle
+  P-ANA-EXP-01: {module: exponentielle, niveau: partiel}
+  P-ANA-EXP-02: {module: exponentielle, niveau: complet}
+  P-ANA-EXP-03: {module: exponentielle, niveau: complet}
+  P-ANA-EXP-04: {module: exponentielle, niveau: complet}
+  P-ANA-EXP-05: {module: exponentielle, niveau: complet}
+  P-ANA-EXP-06: {module: exponentielle, niveau: complet}
+  P-ANA-EXP-07: {module: exponentielle, niveau: partiel}
+  P-ANA-EXP-08: {module: exponentielle, niveau: partiel}
+  # Trigonométrie
+  P-ANA-TRI-01: {module: trigonometrie, niveau: complet}
+  P-ANA-TRI-02: {module: trigonometrie, niveau: complet}
+  P-ANA-TRI-03: {module: trigonometrie, niveau: complet}
+  P-ANA-TRI-04: {module: trigonometrie, niveau: complet}
+  P-ANA-TRI-05: {module: trigonometrie, niveau: complet}
+  P-ANA-TRI-06: {module: trigonometrie, niveau: partiel}

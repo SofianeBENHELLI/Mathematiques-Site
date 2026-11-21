@@ -4,6 +4,8 @@ const paths={
 polynomes:'<path d="M3 19h18M7 3v18M4 5q8 26 16 0"/>',
 fonctions:'<path d="M3 20h18M5 3v17M5 17C8 17 9 6 13 6s4 11 8 11"/><circle cx="13" cy="6" r="1.6"/>',
 derivation:'<path d="M3 20h18M5 3v17M5 18q8 0 14-13M6 20 20 7"/><circle cx="13" cy="11" r="1.8"/>',
+exponentielle:'<path d="M3 20h18M5 3v17M5 18c8 0 11-2 14-13"/><circle cx="13" cy="15" r="1.6"/>',
+trigonometrie:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18M12 12l6-7M18 5v7"/>',
 suites:'<path d="M3 20h18M4 17h4v-4h4V9h4V5h5"/><circle cx="8" cy="13" r="1"/><circle cx="16" cy="5" r="1"/>',
 d1:'<path d="M3 20h18M5 3v18M6 17q8 2 13-13M5 19 21 5"/><circle cx="14" cy="11" r="2"/>',
 d2:'<path d="M3 20h18M4 17C7-4 15 29 20 5"/><path d="m16 5 4 0 1 4"/>',

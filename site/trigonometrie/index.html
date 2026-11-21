@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trigonométrie : le cercle, cos et sin | Les maths de Sanaa</title>
+<meta name="description" content="Cercle trigonométrique, radians, cosinus et sinus, valeurs remarquables, symétries, équations : cours, ateliers interactifs et exercices corrigés pour la Première spécialité.">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/mini.css">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Maths Sanaa"><meta name="theme-color" content="#3459e8"></head>
+<body>
+<div class="dedication">Pour Sanaa <span>✦</span> un cercle qui devient deux courbes</div>
+<header><a class="brand" href="#essentiel">trigonométrie<span>cos</span></a><span>LE LABO DE SANAA</span><button id="reset" type="button">↺ Réinitialiser</button></header>
+<div id="sitenav" data-current="trigonometrie"></div>
+<div class="navwrap"><strong id="sticky-formula">cos² x + sin² x = 1</strong>
+<nav aria-label="Chapitres"><a href="#essentiel">Essentiel</a><a href="#ateliers">Ateliers</a><a href="#exercices">Exercices</a></nav></div>
+<main>
+<section class="hero"><div><p class="eyebrow">PREMIÈRE SPÉCIALITÉ · TRIGONOMÉTRIE</p>
+<h1>Un point qui tourne, <em>deux courbes qui naissent.</em></h1>
+<p>Tu vas lire cos et sin directement sur le cercle, retrouver les valeurs remarquables sans les apprendre par cœur, et résoudre les équations en les voyant.</p></div>
+<div class="hero-note"><span>TON PARCOURS</span><b>Radian → cercle → symétries → courbes → équations</b><p>Chaque idée a son atelier : tourne le point, regarde, puis retiens.</p></div></section>
+
+<section id="essentiel"><div class="section-heading"><span>01 / L'ESSENTIEL</span><h2>Six idées à posséder.</h2></div>
+<details class="course" open><summary>▤ 1. Le radian et le cercle trigonométrique<span>+</span></summary><div>
+<p class="formula">π rad = 180° &nbsp;&nbsp; α° = α × π/180 rad</p>
+<p>Le <b>cercle trigonométrique</b> est le cercle de centre O et de rayon 1, orienté dans le sens direct (inverse des aiguilles d'une montre). Un angle de x radians correspond à un arc de longueur x sur ce cercle : c'est pour cela que le radian est l'unité naturelle. Le point image M de x a pour coordonnées <b>(cos x ; sin x)</b>.</p>
+<p>Deux réels qui diffèrent d'un multiple de 2π ont le même point image : x et x + 2kπ (k entier). La <b>mesure principale</b> est celle qui est dans ]−π ; π].</p></div></details>
+
+<details class="course"><summary>▤ 2. Valeurs remarquables<span>+</span></summary><div>
+<table><thead><tr><th>x</th><th>0</th><th>π/6</th><th>π/4</th><th>π/3</th><th>π/2</th><th>π</th></tr></thead>
+<tbody><tr><th>cos x</th><td>1</td><td>√3/2</td><td>√2/2</td><td>1/2</td><td>0</td><td>−1</td></tr>
+<tr><th>sin x</th><td>0</td><td>1/2</td><td>√2/2</td><td>√3/2</td><td>1</td><td>0</td></tr></tbody></table>
+<p><b>Truc pour ne rien apprendre :</b> sin x vaut √0/2, √1/2, √2/2, √3/2, √4/2 pour x = 0, π/6, π/4, π/3, π/2. Pour cos, on lit la même liste à l'envers.</p></div></details>
+
+<details class="course"><summary>▤ 3. Relations fondamentales<span>+</span></summary><div>
+<p class="formula">cos² x + sin² x = 1 &nbsp;&nbsp; −1 ≤ cos x ≤ 1 &nbsp;&nbsp; −1 ≤ sin x ≤ 1</p>
+<p>Elle vient du théorème de Pythagore dans le triangle rectangle formé par M, son projeté sur (Ox) et O, de côtés |cos x| et |sin x| et d'hypoténuse 1. Si l'on connaît cos x et le signe de sin x, on retrouve sin x.</p>
+<p class="trap"><b>Piège.</b> sin² x signifie (sin x)², pas sin(x²). Et sin x = ±√(1 − cos² x) : le signe se lit sur le cercle.</p></div></details>
+
+<details class="course"><summary>▤ 4. Symétries et périodicité<span>+</span></summary><div>
+<p class="formula">cos(−x) = cos x &nbsp; sin(−x) = −sin x<br>cos(π − x) = −cos x &nbsp; sin(π − x) = sin x<br>cos(π + x) = −cos x &nbsp; sin(π + x) = −sin x<br>cos(π/2 − x) = sin x &nbsp; sin(π/2 − x) = cos x<br>cos(x + 2π) = cos x &nbsp; sin(x + 2π) = sin x</p>
+<p>Ne retiens pas cette liste : <b>vois</b> la symétrie du point M. −x : par rapport à (Ox). π − x : par rapport à (Oy). π + x : par rapport à O. π/2 − x : par rapport à la première bissectrice. L'atelier 3 les montre toutes.</p></div></details>
+
+<details class="course"><summary>▤ 5. Les courbes de cos et de sin<span>+</span></summary><div>
+<p>Les courbes de cos et sin sont des <b>sinusoïdes</b>, de période 2π, comprises entre −1 et 1. cos est paire (symétrique par rapport à l'axe des ordonnées), sin est impaire (symétrique par rapport à O). Elles se déduisent l'une de l'autre par une translation : sin x = cos(x − π/2).</p>
+<p>Pour a·cos(bx + c) + d : amplitude |a|, période 2π/|b|, décalage horizontal −c/b, axe médian y = d. Atelier 4.</p></div></details>
+
+<details class="course"><summary>▤ 6. Résoudre cos x = a et sin x = a<span>+</span></summary><div>
+<p class="formula">cos x = cos α ⇔ x = α + 2kπ ou x = −α + 2kπ<br>sin x = sin α ⇔ x = α + 2kπ ou x = π − α + 2kπ</p>
+<p>Méthode : on place la valeur a sur l'axe qui convient (abscisses pour cos, ordonnées pour sin), on trace la droite, on lit les deux points du cercle, puis on garde ceux de l'intervalle demandé. Atelier 5.</p>
+<p><b>Pour aller plus loin.</b> cos′ = −sin et sin′ = cos, donc (cos(ax + b))′ = −a·sin(ax + b) et (sin(ax + b))′ = a·cos(ax + b).</p></div></details>
+</section>
+
+<section id="ateliers"><div class="section-heading"><span>02 / MANIPULER</span><h2>Cinq ateliers.</h2></div>
+<div id="lab1"></div><div id="lab2"></div><div id="lab3"></div><div id="lab4"></div><div id="lab5"></div></section>
+
+<section id="exercices"><div class="section-heading"><span>03 / S'ENTRAÎNER</span><h2>Quatorze exercices corrigés.</h2></div>
+<p>Niveau ★ : réflexe. ★★ : application directe. ★★★ : raisonnement.</p>
+<div id="exos"></div>
+<details class="panel"><summary>Ma checklist de révision <span>+</span></summary><div id="checklist" class="panel-body"></div></details></section>
+<footer><b>Fait pour Sanaa, avec confiance en sa réussite.</b><p>Trigonométrie · Première générale, spécialité mathématiques. Les ateliers illustrent, ils ne remplacent pas une démonstration.</p></footer>
+</main>
+<script src="../assets/fx.js"></script><script src="../assets/mini.js"></script><script src="content.js"></script><script src="app.js"></script><script src="/assets/nav.js"></script><script src="/assets/pwa.js"></script>
+</body></html>

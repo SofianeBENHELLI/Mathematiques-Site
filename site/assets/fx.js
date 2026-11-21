@@ -24,7 +24,8 @@
       .toLowerCase();
   }
 
-  function tokenize(src) {
+  function tokenize(src, params) {
+    params = params || [];
     var s = normalize(src), i = 0, out = [], m;
     while (i < s.length) {
       var c = s[i];
@@ -43,6 +44,7 @@
           for (var j = 0; j < names.length; j++) if (rest.indexOf(names[j]) === 0 && (!hit || names[j].length > hit.length)) hit = names[j];
           if (hit) { parts.push(hit); rest = rest.slice(hit.length); }
           else if (rest[0] === 'x') { parts.push('x'); rest = rest.slice(1); }
+          else if (params.indexOf(rest[0]) >= 0) { parts.push(rest[0]); rest = rest.slice(1); }
           else throw new Error('symbole inconnu : ' + rest);
         }
         parts.forEach(function (p) { out.push({ k: 'id', v: p }); });
@@ -54,8 +56,8 @@
     return out;
   }
 
-  function parse(src) {
-    var t = tokenize(src), p = 0;
+  function parse(src, params) {
+    var t = tokenize(src, params), p = 0;
     function peek() { return t[p]; }
     function isOp(v) { var x = t[p]; return x && x.k === 'op' && x.v === v; }
     function startsAtom() {
@@ -98,6 +100,7 @@
       if (x.k === 'id') {
         p++;
         if (x.v === 'x') return { t: 'var' };
+        if (params && params.indexOf(x.v) >= 0) return { t: 'par', n: x.v };
         if (CONSTS[x.v] !== undefined) return { t: 'const', n: x.v };
         // fonction : argument entre parenthèses, ou atome/puissance collée (ex. sqrt x, e^x géré ailleurs)
         var arg;
@@ -113,14 +116,15 @@
   }
 
   /* ---------- Évaluation ---------- */
-  function ev(n, x) {
+  function ev(n, x, p) {
     switch (n.t) {
       case 'num': return n.v;
       case 'var': return x;
+      case 'par': return p ? p[n.n] : NaN;
       case 'const': return CONSTS[n.n];
-      case 'neg': return -ev(n.a, x);
+      case 'neg': return -ev(n.a, x, p);
       case 'bin': {
-        var a = ev(n.a, x), b = ev(n.b, x);
+        var a = ev(n.a, x, p), b = ev(n.b, x, p);
         if (n.op === '+') return a + b;
         if (n.op === '-') return a - b;
         if (n.op === '*') return a * b;
@@ -129,7 +133,7 @@
         return Math.pow(a, b);
       }
       case 'fn': {
-        var u = ev(n.a, x);
+        var u = ev(n.a, x, p);
         switch (n.name) {
           case 'exp': return Math.exp(u);
           case 'ln': return u > 0 ? Math.log(u) : NaN;
@@ -144,9 +148,9 @@
     return NaN;
   }
 
-  function compile(src) {
-    var tree = typeof src === 'string' ? parse(src) : src;
-    var f = function (x) { return ev(tree, x); };
+  function compile(src, params) {
+    var tree = typeof src === 'string' ? parse(src, params) : src;
+    var f = function (x, p) { return ev(tree, x, p); };
     f.tree = tree;
     return f;
   }
@@ -158,7 +162,7 @@
   function hasX(n) {
     switch (n.t) {
       case 'var': return true;
-      case 'num': case 'const': return false;
+      case 'num': case 'const': case 'par': return false;
       case 'neg': return hasX(n.a);
       case 'fn': return hasX(n.a);
       default: return hasX(n.a) || hasX(n.b);
@@ -217,7 +221,7 @@
   /* ---------- Dérivation symbolique ---------- */
   function diff(n) {
     switch (n.t) {
-      case 'num': case 'const': return N(0);
+      case 'num': case 'const': case 'par': return N(0);
       case 'var': return N(1);
       case 'neg': return neg(diff(n.a));
       case 'bin': {
@@ -267,6 +271,7 @@
     switch (n.t) {
       case 'num': s = fmtNum(Math.abs(n.v)); p = 5; if (n.v < 0) { s = '-' + s; p = 3; } break;
       case 'var': s = 'x'; p = 5; break;
+      case 'par': s = n.n; p = 5; break;
       case 'const': s = n.n === 'pi' ? 'π' : 'e'; p = 5; break;
       case 'neg': s = '-' + str(n.a, 2); p = 3; break;
       case 'fn': s = n.name + '(' + str(n.a, 0) + ')'; p = 5; break;
@@ -292,7 +297,7 @@
     if (parent !== undefined && p < parent) s = '(' + s + ')';
     return s;
   }
-  function toString(n) { return str(typeof n === 'string' ? parse(n) : (n.tree || n), 0); }
+  function toString(n, params) { return str(typeof n === 'string' ? parse(n, params) : (n.tree || n), 0); }
 
   var SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻' };
   function pretty(s) {
@@ -434,7 +439,7 @@
   };
 
   return {
-    parse: parse, compile: compile, diff: diff, derive: function (src) { return diff(typeof src === 'string' ? parse(src) : (src.tree || src)); },
+    parse: parse, compile: compile, diff: diff, derive: function (src, params) { return diff(typeof src === 'string' ? parse(src, params) : (src.tree || src)); },
     toString: toString, pretty: pretty, equivalent: equivalent, numDiff: numDiff, bisect: bisect, roots: roots,
     Graph: Graph, fmt: fmtNum, evalTree: ev,
     _n: { N: N, add: add, mul: mul, pow: pow }
