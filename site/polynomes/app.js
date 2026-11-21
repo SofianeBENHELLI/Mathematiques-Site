@@ -14,6 +14,7 @@
     params: [{ k: 'a', label: 'a =', min: -3, max: 3, step: 0.5, val: 1 }, { k: 'b', label: 'b =', min: -6, max: 6, step: 0.5, val: -2 }, { k: 'c', label: 'c =', min: -6, max: 6, step: 0.5, val: -3 }],
     curves: [{ expr: 'a*x^2+b*x+c', color: BLUE }],
     win: [-6, 6, -8, 8],
+    handles: [{ id: 'S', color: PURPLE, params: ['b', 'c'], pos: function (v) { if (v.a === 0) return null; var al = -v.b / (2 * v.a); return { x: al, y: v.a * al * al + v.b * al + v.c }; }, vals: function (x, y, v) { return [-2 * v.a * x, y + v.a * x * x]; } }],
     presets: [{ name: 'Deux racines : x² − 2x − 3', vals: { a: 1, b: -2, c: -3 } }, { name: 'Racine double : x² − 4x + 4', vals: { a: 1, b: -4, c: 4 } }, { name: 'Aucune racine : x² + 2x + 3', vals: { a: 1, b: 2, c: 3 } }, { name: 'Ouverte vers le bas : −x² + 4', vals: { a: -1, b: 0, c: 4 } }],
     extra: function (g, v) {
       if (v.a === 0) return;
@@ -36,6 +37,7 @@
     params: [{ k: 'a', label: 'a =', min: -3, max: 3, step: 0.5, val: 1 }, { k: 'p', label: 'α (abscisse du sommet) =', min: -4, max: 4, step: 0.5, val: 2 }, { k: 'q', label: 'β (ordonnée du sommet) =', min: -6, max: 6, step: 0.5, val: -1 }],
     curves: [{ expr: 'a*(x-p)^2+q', color: BLUE }],
     win: [-6, 6, -8, 8],
+    handles: [{ id: 'S', color: PURPLE, params: ['p', 'q'], pos: function (v) { return { x: v.p, y: v.q }; }, vals: function (x, y) { return [x, y]; } }],
     extra: function (g, v) { g.line(v.p, -8, v.p, 8, GREY, { dashed: true }); g.point(v.p, v.q, PURPLE, { r: 6.5 }); },
     readout: function (v) {
       if (v.a === 0) return '<b>a = 0 : choisis a ≠ 0.</b>';
@@ -98,6 +100,7 @@
     params: [{ k: 'r', label: 'Racine x₁ =', min: -5, max: 5, step: 0.5, val: -1 }, { k: 's', label: 'Racine x₂ =', min: -5, max: 5, step: 0.5, val: 3 }],
     curves: [{ expr: '(x-r)*(x-s)', color: BLUE }],
     win: [-6, 6, -8, 8],
+    handles: [{ id: 'x1', color: GREEN, params: ['r'], pos: function (v) { return { x: v.r, y: 0 }; }, vals: function (x) { return [x]; }, move: function (x) { return { x: x, y: 0 }; } }, { id: 'x2', color: ORANGE, params: ['s'], pos: function (v) { return { x: v.s, y: 0 }; }, vals: function (x) { return [x]; }, move: function (x) { return { x: x, y: 0 }; } }],
     extra: function (g, v) { g.point(v.r, 0, GREEN, { r: 6.5 }); g.point(v.s, 0, GREEN, { r: 6.5 }); g.line((v.r + v.s) / 2, -8, (v.r + v.s) / 2, 8, GREY, { dashed: true }); },
     readout: function (v) {
       var S = v.r + v.s, P = v.r * v.s;
@@ -130,13 +133,16 @@
     var L = Mini.makeLab('lab6', '6. Optimiser : l’aire d’un rectangle', 'périmètre 20 m, largeur x');
     var g = new FX.Graph(L.graph, { xmin: -0.5, xmax: 10.5, ymin: -2, ymax: 28, label: 'Aire du rectangle en fonction de sa largeur' });
     var out = h('<div class="readout" aria-live="polite"></div>');
+    var sync6;
     function draw(x) {
-      g.clear(); g.curve(function (t) { return t * (10 - t); }, BLUE, { from: 0, to: 10 });
+      g.clear(); if (sync6) sync6(); g.curve(function (t) { return t * (10 - t); }, BLUE, { from: 0, to: 10 });
       g.point(5, 25, GREEN, { r: 6 }); g.label(5, 25, 'maximum', GREEN);
       g.point(x, x * (10 - x), ORANGE, { r: 6.5 }); g.line(x, 0, x, x * (10 - x), ORANGE, { dashed: true });
       out.innerHTML = 'Largeur x = <b class="mono">' + r2(x) + '</b> m, longueur 10 − x = <b class="mono">' + r2(10 - x) + '</b> m<br>Aire A(x) = x(10 − x) = −x² + 10x = <b class="mono">' + r2(x * (10 - x)) + '</b> m²<br>a = −1 &lt; 0 : maximum au sommet x = −b/(2a) = 5, A(5) = 25.<br>Forme canonique : A(x) = 25 − (x − 5)². L’aire est maximale quand le rectangle est un carré.';
     }
-    L.side.appendChild(Mini.slider('p6-x', 'Largeur x (m) =', 0, 10, 0.25, 3, draw)); L.side.appendChild(out); draw(3);
+    var sx6 = Mini.slider('p6-x', 'Largeur x (m) =', 0, 10, 0.25, 3, draw);
+    sync6 = Mini.dragSlider(g, 'x', sx6, { color: ORANGE, pos: function (v) { return { x: v, y: v * (10 - v) }; }, val: function (x) { return x; }, move: function (x) { x = Math.max(0, Math.min(10, x)); return { x: x, y: x * (10 - x) }; } });
+    L.side.appendChild(sx6); L.side.appendChild(out); draw(3);
   })();
 
   Mini.exercises(document.getElementById('exos'), window.POL_EX, 'second-degre');

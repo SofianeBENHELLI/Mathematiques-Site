@@ -61,18 +61,18 @@
     var L = Mini.makeLab('lab3', '3. Équation d’un cercle', 'centre, rayon, forme développée');
     var g = plane(L.graph, 'Cercle de centre et de rayon réglables');
     var out = h('<div class="readout" aria-live="polite"></div>');
-    var s = { p: 2, q: -1, r: 3, t: 30 };
+    var s = { p: 2, q: -1, r: 3, t: 30 }, syncC, syncM;
     function draw() {
-      g.clear(); g.circle(s.p, s.q, s.r, BLUE, { fill: BLUE }); g.point(s.p, s.q, PURPLE, { r: 5 });
+      g.clear(); if (syncC) { syncC(); syncM(); } g.circle(s.p, s.q, s.r, BLUE, { fill: BLUE }); g.point(s.p, s.q, PURPLE, { r: 5 });
       var mx = s.p + s.r * Math.cos(s.t * D2R), my = s.q + s.r * Math.sin(s.t * D2R);
       g.line(s.p, s.q, mx, my, ORANGE, { dashed: true }); g.point(mx, my, ORANGE, { r: 6 });
       var u = -2 * s.p, v = -2 * s.q, w = s.p * s.p + s.q * s.q - s.r * s.r;
       out.innerHTML = 'Canonique : (x ' + sg(-s.p) + ')² + (y ' + sg(-s.q) + ')² = ' + r2(s.r * s.r) + '<br>Développée : x² + y² ' + sg(u) + 'x ' + sg(v) + 'y ' + sg(w) + ' = 0<br>Le centre a les coordonnées <b>opposées</b> à celles des parenthèses : Ω(' + r2(s.p) + ' ; ' + r2(s.q) + ').<br>Point M (orange) : (' + r3(mx) + ' ; ' + r3(my) + '), ΩM = <b class="mono">' + r3(Math.hypot(mx - s.p, my - s.q)) + '</b> = r.';
     }
-    L.side.appendChild(Mini.slider('dc3-p', 'Centre : abscisse p =', -5, 5, 1, 2, function (v) { s.p = v; draw(); }));
-    L.side.appendChild(Mini.slider('dc3-q', 'Centre : ordonnée q =', -5, 5, 1, -1, function (v) { s.q = v; draw(); }));
-    L.side.appendChild(Mini.slider('dc3-r', 'Rayon r =', 1, 5, 0.5, 3, function (v) { s.r = v; draw(); }));
-    L.side.appendChild(Mini.slider('dc3-t', 'Point M (degrés) =', 0, 360, 5, 30, function (v) { s.t = v; draw(); }));
+    var sp = Mini.slider('dc3-p', 'Centre : abscisse p =', -5, 5, 1, 2, function (v) { s.p = v; draw(); }), sq = Mini.slider('dc3-q', 'Centre : ordonnée q =', -5, 5, 1, -1, function (v) { s.q = v; draw(); }), sr = Mini.slider('dc3-r', 'Rayon r =', 1, 5, 0.5, 3, function (v) { s.r = v; draw(); }), st = Mini.slider('dc3-t', 'Point M (degrés) =', 0, 360, 5, 30, function (v) { s.t = v; draw(); });
+    [sp, sq, sr, st].forEach(function (x) { L.side.appendChild(x); });
+    syncC = Mini.dragSliders(g, 'centre', [sp, sq], { color: PURPLE, pos: function (v) { return { x: v[0], y: v[1] }; }, vals: function (x, y) { return [Math.round(x), Math.round(y)]; } });
+    syncM = Mini.dragSliders(g, 'M', [sr, st], { color: ORANGE, pos: function () { return { x: s.p + s.r * Math.cos(s.t * D2R), y: s.q + s.r * Math.sin(s.t * D2R) }; }, vals: function (x, y) { var d = Math.atan2(y - s.q, x - s.p) / D2R; return [Math.hypot(x - s.p, y - s.q), d < 0 ? d + 360 : d]; } });
     L.side.appendChild(out); draw();
   })();
 
@@ -100,15 +100,17 @@
     var L = Mini.makeLab('lab5', '5. Tangente à un cercle en A', 'ΩA est le vecteur normal');
     var g = plane(L.graph, 'Cercle et tangente en un point A');
     var out = h('<div class="readout" aria-live="polite"></div>');
-    var s = { t: 53, r: 5 };
+    var s = { t: 53, r: 5 }, syncA;
     function draw() {
+      if (syncA) syncA();
       var ax = s.r * Math.cos(s.t * D2R), ay = s.r * Math.sin(s.t * D2R);
       g.clear(); g.circle(0, 0, s.r, BLUE, { fill: BLUE }); g.point(0, 0, '#20283d', { r: 4 });
       lineEq(g, ax, ay, -(ax * ax + ay * ay), ORANGE, { width: 3 }); g.arrow(0, 0, ax, ay, PURPLE); g.point(ax, ay, ORANGE, { r: 6.5 }); g.label(ax, ay, 'A', ORANGE);
       out.innerHTML = 'Cercle x² + y² = ' + r2(s.r * s.r) + '. A(<b class="mono">' + r3(ax) + '</b> ; <b class="mono">' + r3(ay) + '</b>), vecteur normal OA (violet).<br>Tangente : <b>' + r3(ax) + 'x ' + sg(ay).replace(/(\d)(?=\D*$)/, '$1') + 'y = ' + r2(s.r * s.r) + '</b><br>car ΩA·AM = 0 donne a·x + b·y = a·xA + b·yA = r².<br>La tangente n’a qu’un point commun avec le cercle et reste à distance r de O.';
     }
-    L.side.appendChild(Mini.slider('dc5-t', 'Position de A (degrés) =', 0, 360, 1, 53, function (v) { s.t = v; draw(); }));
-    L.side.appendChild(Mini.slider('dc5-r', 'Rayon r =', 2, 7, 1, 5, function (v) { s.r = v; draw(); }));
+    var st5 = Mini.slider('dc5-t', 'Position de A (degrés) =', 0, 360, 1, 53, function (v) { s.t = v; draw(); }), sr5 = Mini.slider('dc5-r', 'Rayon r =', 2, 7, 1, 5, function (v) { s.r = v; draw(); });
+    L.side.appendChild(st5); L.side.appendChild(sr5);
+    syncA = Mini.dragSliders(g, 'A', [st5], { color: ORANGE, pos: function () { return { x: s.r * Math.cos(s.t * D2R), y: s.r * Math.sin(s.t * D2R) }; }, vals: function (x, y) { var d = Math.atan2(y, x) / D2R; return [d < 0 ? d + 360 : d]; }, move: function (x, y) { var n = Math.hypot(x, y) || 1; return { x: s.r * x / n, y: s.r * y / n }; } });
     L.side.appendChild(out); draw();
   })();
 

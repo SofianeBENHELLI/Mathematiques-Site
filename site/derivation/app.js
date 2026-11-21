@@ -39,12 +39,13 @@
       timer = setInterval(function () { if (hi >= HS.length - 1) { clearInterval(timer); timer = null; play.textContent = '▶ Faire tendre h vers 0'; return; } hsl.set(hi + 1); }, 650);
     };
     L.side.appendChild(sel); L.side.appendChild(asl); L.side.appendChild(hsl); L.side.appendChild(play); L.side.appendChild(out); L.side.appendChild(tbl);
-    function newGraph() { L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Courbe, sécante et tangente' }); }
+    function newGraph() { L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Courbe, sécante et tangente' }); sync1 = Mini.dragSlider(g, 'a', asl, { color: ORANGE, pos: function (v) { var y = cur.fn(v); return isFinite(y) ? { x: v, y: Math.max(g.ymin, Math.min(g.ymax, y)) } : null; }, val: function (x) { return x; } }); }
+    var sync1;
     var lastCur = null;
     function draw() {
       if (cur !== lastCur) { newGraph(); lastCur = cur; }
       hsl.querySelector('output').textContent = fmt(HS[hi]);
-      g.clear(); g.curve(cur.fn, BLUE);
+      g.clear(); g.curve(cur.fn, BLUE); sync1(a);
       var fa = cur.fn(a), hh = HS[hi], fb = cur.fn(a + hh);
       if (!isFinite(fa)) { out.className = 'readout warn'; out.innerHTML = 'f n’est pas définie en a = ' + r2(a) + '. Déplace le point A.'; tbl.innerHTML = ''; return; }
       var ex = cur.d(a);
@@ -89,11 +90,12 @@
       if (Math.abs(v - ex) <= 0.2) { fb.className = 'ex-fb good'; fb.innerHTML = 'Bien lu. Valeur exacte : f′(' + r2(challenge.x) + ') = <b>' + r3(ex) + '</b>.'; }
       else { fb.className = 'ex-fb bad'; fb.textContent = 'Pas tout à fait. Compte de combien la tangente monte quand tu avances de 1 vers la droite (triangle en pointillés).'; }
     };
-    function newGraph() { L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Courbe et tangente' }); }
+    function newGraph() { L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Courbe et tangente' }); sync2 = Mini.dragSlider(g, 'a', asl, { color: ORANGE, pos: function (v) { var y = cur.fn(v); return isFinite(y) ? { x: v, y: Math.max(g.ymin, Math.min(g.ymax, y)) } : null; }, val: function (x) { return x; } }); }
+    var sync2;
     var last = null;
     function draw() {
       if (cur !== last) { newGraph(); last = cur; }
-      g.clear(); g.curve(cur.fn, BLUE);
+      g.clear(); g.curve(cur.fn, BLUE); sync2(a); g.handle('a', { hidden: !!challenge });
       var fa = cur.fn(a);
       if (!isFinite(fa)) { out.className = 'readout warn'; out.innerHTML = 'f n’est pas définie en ' + r2(a) + '.'; return; }
       var m = cur.d(a);
@@ -154,7 +156,7 @@
       { n: '−x² + 4x', f: '-x^2+4x', lo: -1, hi: 5 },
       { n: 'x⁴ − 2x²', f: 'x^4-2x^2', lo: -2, hi: 2 }
     ];
-    var cur, f, d, g1, g2, xv = 0;
+    var cur, f, d, g1, g2, xv = 0, syncF;
     var out = h('<div class="readout" aria-live="polite"></div>');
     var sel = Mini.select('fp-sel', 'Fonction', presets.map(function (p) { return 'f(x) = ' + p.n; }), function (i) { set(presets[i]); });
     var xsl = Mini.slider('fp-x', 'Point x =', -3, 3, 0.05, 0, function (v) { xv = v; draw(); });
@@ -171,13 +173,14 @@
       var c1 = h('<div></div>'), c2 = h('<div style="margin-top:8px"></div>'); L.graph.appendChild(c1); L.graph.appendChild(c2);
       g1 = new FX.Graph(c1, { width: 640, height: 250, xmin: p.lo, xmax: p.hi, ymin: yr[0], ymax: yr[1], label: 'Courbe de f' });
       g2 = new FX.Graph(c2, { width: 640, height: 200, xmin: p.lo, xmax: p.hi, ymin: dr[0], ymax: dr[1], label: 'Courbe de la dérivée f prime' });
+      syncF = Mini.dragSlider(g1, 'x', xsl, { color: ORANGE, pos: function (v) { var y = f(v); return isFinite(y) ? { x: v, y: Math.max(g1.ymin, Math.min(g1.ymax, y)) } : null; }, val: function (x) { return x; } });
       var vt = Mini.variationTable(f, p.lo, p.hi, { df: d });
       box.innerHTML = '<p style="margin:10px 0 0"><b>Dérivée :</b> f′(x) = ' + FX.pretty(FX.toString(FX.derive(p.f))) + '</p>' + vt.html;
       xsl.set(xv);
     }
     function draw() {
       if (!g1) return;
-      g1.clear(); g2.clear(); g1.curve(f, BLUE); g2.curve(d, PURPLE);
+      g1.clear(); g2.clear(); g1.curve(f, BLUE); g2.curve(d, PURPLE); syncF(xv);
       var y = f(xv), m = d(xv);
       g1.slope(xv, y, m, ORANGE, { width: 2 }); g1.point(xv, y, ORANGE);
       g2.point(xv, m, ORANGE); g2.line(xv, 0, xv, m, ORANGE, { dashed: true });
@@ -229,7 +232,7 @@
       { n: 'Bénéfice d’une entreprise (en centaines d’euros)', f: '-x^2+60x-500', lo: 0, hi: 60, win: [0, 60, -600, 500], u: '(centaines d’€)', lab: 'quantité produite x', best: 30,
         steps: 'B(x) = −x² + 60x − 500 sur [0 ; 60].<br>B′(x) = −2x + 60 = −2(x − 30).<br>B′ &gt; 0 avant 30, &lt; 0 après : maximum en x = 30.<br><b>B(30) = 400</b> soit 40 000 €.' }
     ];
-    var cur = cases[0], f, g, xv = 5;
+    var cur = cases[0], f, g, xv = 5, syncO;
     var out = h('<div class="readout" aria-live="polite"></div>');
     var sel = Mini.select('o-sel', 'Problème', cases.map(function (c) { return c.n; }), function (i) { cur = cases[i]; set(); });
     var xsl = Mini.slider('o-x', 'x =', 0, 20, 0.1, 5, function (v) { xv = v; draw(); });
@@ -239,11 +242,11 @@
     L.side.appendChild(sel); L.side.appendChild(xsl); L.side.appendChild(out); L.side.appendChild(rev); L.side.appendChild(sol);
     function set() {
       f = FX.compile(cur.f); xsl.input.min = cur.lo; xsl.input.max = cur.hi; xsl.input.step = (cur.hi - cur.lo) / 200; xv = cur.lo + (cur.hi - cur.lo) * 0.25;
-      L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Fonction à optimiser' });
+      L.graph.innerHTML = ''; g = new FX.Graph(L.graph, { xmin: cur.win[0], xmax: cur.win[1], ymin: cur.win[2], ymax: cur.win[3], label: 'Fonction à optimiser' }); syncO = Mini.dragSlider(g, 'x', xsl, { color: ORANGE, pos: function (v) { var y = f(v); return isFinite(y) ? { x: v, y: Math.max(g.ymin, Math.min(g.ymax, y)) } : null; }, val: function (x) { return x; } });
       sol.innerHTML = cur.steps; sol.hidden = true; rev.textContent = 'Voir la résolution avec la dérivée'; xsl.set(xv);
     }
     function draw() {
-      if (!g) return; g.clear(); g.curve(f, BLUE);
+      if (!g) return; g.clear(); g.curve(f, BLUE); syncO(xv);
       var y = f(xv), m = FX.numDiff(f, xv, 1e-5);
       g.slope(xv, y, m, ORANGE, { width: 2 }); g.point(xv, y, ORANGE);
       var near = Math.abs(m) < (cur.win[3] - cur.win[2]) / (cur.hi - cur.lo) * 0.04;
