@@ -13,6 +13,7 @@
     ['/probabilites/', 'Probabilités', 'probabilites'],
     ['/variables-aleatoires/', 'Variables aléatoires', 'variables-aleatoires'],
     ['/statistiques/', 'Statistiques', 'statistiques'],
+    ['/python/', 'Python', 'python'],
     ['/#/bac-blanc', '◷ Bac blanc', 'bac'],
     ['https://science.benhelli.org/', 'Sciences ↗', 'sciences']
   ];

@@ -1,10 +1,11 @@
 /* Service worker généré par scripts/build-pwa.mjs : ne pas modifier sw.js à la main. */
-const VERSION = "c4a1dae44fe6";
+const VERSION = "e73d693a5b40";
 const CACHE = "maths-sanaa-" + VERSION;
 const ASSETS = [
  "/",
  "/assets/app.js",
  "/assets/bac.js",
+ "/assets/backup.js",
  "/assets/base.css",
  "/assets/fonts.css",
  "/assets/fonts/font-0.ttf",
@@ -61,6 +62,9 @@ const ASSETS = [
  "/produit-scalaire/",
  "/produit-scalaire/app.js",
  "/produit-scalaire/content.js",
+ "/python/",
+ "/python/app.js",
+ "/python/content.js",
  "/statistiques/",
  "/statistiques/app.js",
  "/statistiques/content.js",

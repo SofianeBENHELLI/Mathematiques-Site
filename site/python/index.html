@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Python et algorithmique : boucles, listes, suites, dichotomie | Les maths de Sanaa</title>
+<meta name="description" content="Variables, conditions, boucles for et while, fonctions, listes, suites et seuils, dichotomie et simulation avec random : cours, tableaux de suivi interactifs et exercices corrigés pour la Première spécialité.">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="../assets/mini.css">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Maths Sanaa"><meta name="theme-color" content="#3459e8"></head>
+<body>
+<div class="dedication">Pour Sanaa <span>✦</span> lire, prévoir et écrire un programme</div>
+<header><a class="brand" href="#essentiel">python<span>py</span></a><span>LE LABO DE SANAA</span><button id="reset" type="button">↺ Réinitialiser</button></header>
+<div id="sitenav" data-current="python"></div>
+<div class="navwrap"><strong id="sticky-formula">for · while · if · def</strong>
+<nav aria-label="Chapitres"><a href="#essentiel">Essentiel</a><a href="#ateliers">Ateliers</a><a href="#exercices">Exercices</a></nav></div>
+<main>
+<section class="hero"><div><p class="eyebrow">PREMIÈRE SPÉCIALITÉ · ALGORITHMIQUE ET PROGRAMMATION</p>
+<h1>Un programme, <em>c’est un raisonnement qui s’exécute.</em></h1>
+<p>Tu vas lire un programme ligne par ligne avec un tableau de suivi, prévoir ce qu’il affiche, et écrire les boucles dont tu as besoin pour les suites, les seuils, la dichotomie et les simulations.</p></div>
+<div class="hero-note"><span>TON PARCOURS</span><b>Variables → conditions → boucles → fonctions → listes → seuil → dichotomie</b><p>Chaque idée a son atelier : manipule d'abord, retiens ensuite.</p></div></section>
+
+<section id="essentiel"><div class="section-heading"><span>01 / L'ESSENTIEL</span><h2>Sept idées à posséder.</h2></div>
+<details class="course" open><summary>▤ 1. Variables et affectation<span>+</span></summary><div><p>Une variable porte un nom et une valeur. L'instruction <b>x = 3</b> range la valeur 3 dans x. L'affectation se lit de droite à gauche : <b>x = x + 1</b> calcule x + 1 avec l'ancienne valeur, puis range le résultat dans x.</p>
+<p class="formula">x = 3<br>y = 2 * x &nbsp;&nbsp; # y vaut 6<br>x = y + 1 &nbsp;&nbsp; # x vaut 7, y vaut toujours 6</p>
+<p>Une opération comme / donne un nombre à virgule (7/2 vaut 3.5), // donne le quotient entier (7 // 2 vaut 3) et % le reste (7 % 2 vaut 1).</p></div></details>
+<details class="course"><summary>▤ 2. Conditions : if, elif, else<span>+</span></summary><div><p class="formula">if x % 2 == 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;y = x / 2<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;y = 3 * x + 1</p>
+<p>La condition est vraie ou fausse. <b>==</b> teste l'égalité, <b>=</b> affecte. Les opérateurs de comparaison : ==, !=, &lt;, &lt;=, &gt;, &gt;=, et on les combine avec <b>and</b>, <b>or</b>, <b>not</b>. L'indentation (4 espaces) délimite le bloc.</p></div></details>
+<details class="course"><summary>▤ 3. Boucles for et while<span>+</span></summary><div><p><b>for</b> répète un nombre de fois connu : <code>for i in range(n)</code> prend i = 0, 1, …, n − 1 (n tours, la borne n est exclue). <code>range(a, b)</code> va de a à b − 1, <code>range(a, b, pas)</code> avance par pas.</p>
+<p class="formula">s = 0<br>for i in range(1, 5):<br>&nbsp;&nbsp;&nbsp;&nbsp;s = s + i<br>print(s) &nbsp;&nbsp; # 1 + 2 + 3 + 4 = 10</p>
+<p><b>while</b> répète tant qu'une condition est vraie, quand on ne connaît pas le nombre de tours. Il faut que quelque chose dans la boucle fasse changer la condition, sinon la boucle ne s'arrête jamais.</p></div></details>
+<details class="course"><summary>▤ 4. Fonctions<span>+</span></summary><div><p class="formula">def f(x):<br>&nbsp;&nbsp;&nbsp;&nbsp;return x * x - 3<br><br>print(f(2)) &nbsp;&nbsp; # 1<br>print(f(f(2))) &nbsp;&nbsp; # f(1) = -2</p>
+<p>Une fonction reçoit des paramètres et renvoie un résultat avec <b>return</b>. Elle permet de réutiliser un calcul et de le tester sur plusieurs valeurs. <b>print</b> affiche, <b>return</b> renvoie : ce n'est pas la même chose.</p></div></details>
+<details class="course"><summary>▤ 5. Listes<span>+</span></summary><div><p class="formula">L = [3, 8, 1]<br>L.append(5) &nbsp;&nbsp; # [3, 8, 1, 5]<br>len(L) &nbsp;&nbsp; # 4<br>L[0] &nbsp;&nbsp; # 3 (le premier a l'indice 0)<br>[x * x for x in range(5)] &nbsp;&nbsp; # [0, 1, 4, 9, 16]<br>[x for x in range(20) if x % 3 == 0] &nbsp;&nbsp; # 7 éléments</p>
+<p>On parcourt une liste avec <code>for x in L</code>. Les indices commencent à <b>0</b> : le dernier élément d'une liste de n éléments a pour indice n − 1 (ou −1).</p></div></details>
+<details class="course"><summary>▤ 6. Suites et seuils<span>+</span></summary><div><p class="formula">u = 100 &nbsp;&nbsp; n = 0<br>while u &gt; 50:<br>&nbsp;&nbsp;&nbsp;&nbsp;u = 0.9 * u<br>&nbsp;&nbsp;&nbsp;&nbsp;n = n + 1<br>print(n) &nbsp;&nbsp; # premier rang où u ≤ 50</p>
+<p>Pour calculer un terme : une boucle for. Pour chercher le premier rang qui dépasse un seuil : une boucle while avec un compteur n. Le test de la boucle est la <b>négation</b> de ce qu'on cherche : on continue tant que le seuil n'est pas atteint.</p></div></details>
+<details class="course"><summary>▤ 7. Dichotomie et simulation<span>+</span></summary><div><p><b>Dichotomie.</b> Pour encadrer une solution de f(x) = 0 sur [a ; b] quand f est continue et change de signe : on coupe en m = (a + b)/2 et on garde la moitié où le signe change. Chaque tour divise la largeur par 2.</p>
+<p class="formula">while b - a &gt; 0.001:<br>&nbsp;&nbsp;&nbsp;&nbsp;m = (a + b) / 2<br>&nbsp;&nbsp;&nbsp;&nbsp;if f(a) * f(m) &lt;= 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b = m<br>&nbsp;&nbsp;&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a = m</p>
+<p><b>Simulation.</b> <code>from random import randint, random</code> : randint(1, 6) donne un entier de 1 à 6 inclus, random() un réel de [0 ; 1[. On simule beaucoup d'expériences et on observe la fréquence : elle se rapproche de la probabilité.</p></div></details>
+</section>
+
+<section id="ateliers"><div class="section-heading"><span>02 / MANIPULER</span><h2>Trois ateliers.</h2></div>
+<div id="lab1"></div><div id="lab2"></div><div id="lab3"></div></section>
+
+<section id="exercices"><div class="section-heading"><span>03 / S'ENTRAÎNER</span><h2>16 exercices corrigés.</h2></div>
+<p>Niveau ★ : réflexe. ★★ : application directe. ★★★ : raisonnement et rédaction.</p>
+<div id="exos"></div>
+<details class="panel"><summary>Ma checklist de révision <span>+</span></summary><div id="checklist" class="panel-body"></div></details></section>
+<footer><b>Fait pour Sanaa, avec confiance en sa réussite.</b><p>Python et algorithmique · Première générale, spécialité mathématiques. Les ateliers illustrent, ils ne remplacent pas une démonstration.</p></footer>
+</main>
+<script src="../assets/fx.js"></script><script src="../assets/mini.js"></script><script src="content.js"></script><script src="app.js"></script><script src="/assets/nav.js"></script><script src="/assets/pwa.js"></script>
+</body></html>

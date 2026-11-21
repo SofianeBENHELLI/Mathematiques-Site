@@ -101,3 +101,9 @@ couverture:
   P-PRO-PRB-08: {module: variables-aleatoires, niveau: partiel}
   P-PRO-STA-01: {module: statistiques, niveau: complet}
   P-PRO-STA-02: {module: statistiques, niveau: complet}
+
+  # Algorithmique et programmation
+  P-ALGO-PYT-01: {module: python, niveau: complet}
+  P-ALGO-PYT-02: {module: python, niveau: complet}
+  P-ALGO-PYT-03: {module: python, niveau: complet}
+  P-ALGO-PYT-04: {module: python, niveau: complet}
