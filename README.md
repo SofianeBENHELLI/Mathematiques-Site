@@ -22,6 +22,12 @@ Les 38 fichiers de `site/` sont identiques octet par octet a la production (veri
 Aucune etape de build : les fichiers de `site/` sont servis tels quels.
 La progression de l'eleve est stockee dans le navigateur (localStorage), rien cote serveur.
 
+## Deploiement
+
+Automatique via Cloudflare Workers Builds, connecte a ce depot :
+- push sur `main` : mise en production sur mathematiques.benhelli.org
+- push sur une autre branche : version d'apercu avec une adresse temporaire
+
 ## Utilisation
 
 ```sh
