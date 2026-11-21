@@ -6,11 +6,13 @@ const FONC = require('../site/fonctions/content.js');
 const DER = require('../site/derivation/content.js');
 const EXP = require('../site/exponentielle/content.js');
 const TRI = require('../site/trigonometrie/content.js');
+const SUI = require('../site/suites/content.js');
+const POL = require('../site/polynomes/content.js');
 let fail = 0; const ok = (c, m) => { if (!c) { fail++; console.log('ECHEC', m); } };
 const by = (L, id) => L.find(e => e.id === id);
 
 // structure
-for (const [name, L] of [['fonctions', FONC], ['derivation', DER], ['exponentielle', EXP], ['trigonometrie', TRI]]) {
+for (const [name, L] of [['fonctions', FONC], ['derivation', DER], ['exponentielle', EXP], ['trigonometrie', TRI], ['suites', SUI], ['polynomes', POL]]) {
   const ids = new Set();
   for (const e of L) {
     ok(!ids.has(e.id), `${name}: id en double ${e.id}`); ids.add(e.id);
@@ -106,5 +108,48 @@ ok(by(EXP, 'e16').answer === 0 && Math.abs(FX.numDiff(f('e^x*e^(-x)'), 0.7)) < 1
   { const g = f('cos(3x)'), T = 2 * Math.PI / 3; ok([0.2, 1.3, 2.9].every(x => near(g(x + T), g(x))) && !near(g(0.2 + T / 2), g(0.2)) && by(TRI, 't13').answer === 0, 't13'); }
   { const ex = by(TRI, 't14'), g = f('cos(3x+1)'), ans = f(ex.answer); for (const x of [0.4, 1.2, -0.8]) ok(Math.abs(FX.numDiff(g, x) - ans(x)) < 1e-5, 't14 ' + x); }
 }
-console.log(fail ? fail + ' échec(s)' : 'contenu d\'exercices : tout est cohérent (' + (FONC.length + DER.length + EXP.length + TRI.length) + ' exercices)');
+// Suites
+{
+  const A = id => by(SUI, id).answer;
+  ok(3 * 3 - 3 === 6 && 4 * 4 - 3 === A('s01'), 's01');
+  { let u = 2; const t = []; for (let i = 0; i < 3; i++) { u = 3 * u - 1; t.push(u); } ok(t[2] === A('s02') && t[0] === 5 && t[1] === 14, 's02'); }
+  ok(5 + 8 * 3 === A('s03') && 3 * 2 ** 5 === A('s04'), 's03-s04');
+  ok(6 / 2 === 3 && 18 / 6 === 3 && 54 / 18 === 3 && 6 - 2 !== 18 - 6 && by(SUI, 's05').answer === 0, 's05');
+  ok((19 - 7) / 4 === A('s06') && 7 + 4 * 3 === 19, 's06');
+  ok(4 * 25 === 100 && Math.sqrt(100 / 4) === A('s07'), 's07');
+  ok([...Array(50).keys()].reduce((a, k) => a + k + 1, 0) === A('s08'), 's08');
+  ok([...Array(10).keys()].reduce((a, k) => a + 2 ** k, 0) === A('s09') && 2 ** 9 === 512, 's09');
+  { let S = 0; for (let k = 0; k < 30; k++) S += 3 + 2 * k; ok(S === A('s10') && 3 + 29 * 2 === 61, 's10'); }
+  { const d = n => (n + 1) ** 2 - 6 * (n + 1) - (n * n - 6 * n); ok([0, 1, 2, 3, 4, 5].every(n => d(n) === 2 * n - 5) && by(SUI, 's11').answer === 0, 's11'); }
+  { const u = n => -2 * 0.5 ** n; ok(u(1) > u(0) && u(2) > u(1) && u(5) > u(4) && by(SUI, 's12').answer === 1 - 1, 's12'); }
+  { let n = 0; while (1.5 ** n <= 50) n++; ok(n === A('s13') && 1.5 ** 9 < 50, 's13'); }
+  ok(A('s14') === 1.2 && Math.abs(100 * 1.1 * 1.1 - A('s15')) < 1e-9 && Math.abs(1.5 * 0.5 - A('s16')) < 1e-12, 's14-16');
+  { const u = n => 3 * n + 2; ok([0, 1, 7, 20].every(n => u(n + 1) - u(n) === 3) && by(SUI, 's17').answer === 0, 's17'); }
+  { const u = n => (-2) ** n; ok(u(1) < u(0) && u(2) > u(1) && u(3) < u(2) && by(SUI, 's18').answer === 0, 's18'); }
+}
+
+// Second degré
+{
+  const A = id => by(POL, id).answer, D = (a, b, c) => b * b - 4 * a * c;
+  ok(FX.equivalent('(x-3)^2-4', 'x^2-6x+5') && by(POL, 'p01').answer === 0, 'p01');
+  ok(D(2, -3, -2) === A('p02'), 'p02');
+  { const r = [(5 - 1) / 2, (5 + 1) / 2]; ok(D(1, -5, 6) === 1 && r[0] + r[1] === A('p03') && r[0] * r[1] === 6, 'p03'); }
+  ok(D(1, 1, 1) < 0 && A('p04') === 0, 'p04');
+  ok(D(1, -6, 9) === 0 && A('p05') === 3 && 9 - 18 + 9 === 0, 'p05');
+  ok(FX.equivalent('(2x-1)(x+3)', A('p06'), { lo: -3, hi: 3 }), 'p06');
+  { const f = x => -x * x + 4; ok(f(0) > 0 && f(1.9) > 0 && f(2.1) < 0 && f(-2.1) < 0 && by(POL, 'p07').answer === 0, 'p07'); }
+  ok(-(-8) / (2 * 2) === A('p08') && 2 * 4 - 16 + 1 === -7, 'p08');
+  ok(Math.abs(f('x^2-4x+7')(2) - A('p09')) < 1e-12 && f('x^2-4x+7')(1.9) > 3 && f('x^2-4x+7')(2.1) > 3, 'p09');
+  { const g = f('x^2-x-6'); ok(g(-2) === 0 && g(3) === 0 && g(0) < 0 && g(-3) > 0 && g(4) > 0 && by(POL, 'p10').answer === 0, 'p10'); }
+  ok(D(3, -12, 5) > 0 && 12 / 3 === A('p11'), 'p11');
+  { const r = FX.roots(f('2x^2+3x-5'), -10, 10); ok(r.length === 2 && Math.abs(r[0] * r[1] - A('p12')) < 1e-6 && -5 / 2 === A('p12'), 'p12'); }
+  ok(9 + 3 * A('p13') + 12 === 0, 'p13');
+  ok(FX.roots(f('x^4-5x^2+4'), -5, 5).length === A('p14'), 'p14');
+  ok(D(1, -4, A('p15')) === 0, 'p15');
+  { let n = 0; for (let m = -20; m <= 20; m++) if (D(1, m, 9) < 0) n++; ok(n === A('p16'), 'p16 ' + n); }
+  { let mx = 0; for (let x = 0; x <= 10; x += 0.01) mx = Math.max(mx, x * (10 - x)); ok(Math.abs(mx - A('p17')) < 1e-3, 'p17'); }
+  ok(FX.equivalent('2(x-1)^2-3', A('p18'), { lo: -3, hi: 3 }), 'p18');
+}
+
+console.log(fail ? fail + ' échec(s)' : 'contenu d\'exercices : tout est cohérent (' + (FONC.length + DER.length + EXP.length + TRI.length + SUI.length + POL.length) + ' exercices)');
 process.exit(fail ? 1 : 0);

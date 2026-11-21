@@ -61,3 +61,22 @@ couverture:
   P-ANA-TRI-04: {module: trigonometrie, niveau: complet}
   P-ANA-TRI-05: {module: trigonometrie, niveau: complet}
   P-ANA-TRI-06: {module: trigonometrie, niveau: partiel}
+  # Suites
+  P-ALG-SUI-01: {module: suites, niveau: complet}
+  P-ALG-SUI-02: {module: suites, niveau: partiel}
+  P-ALG-SUI-03: {module: suites, niveau: complet}
+  P-ALG-SUI-04: {module: suites, niveau: complet}
+  P-ALG-SUI-05: {module: suites, niveau: complet}
+  P-ALG-SUI-06: {module: suites, niveau: complet}
+  P-ALG-SUI-07: {module: suites, niveau: complet}
+  P-ALG-SUI-08: {module: suites, niveau: partiel}
+  P-ALG-SUI-09: {module: suites, niveau: complet}
+  P-ALG-SUI-10: {module: suites, niveau: complet}
+  # Second degré
+  P-ALG-SEC-01: {module: polynomes, niveau: complet}
+  P-ALG-SEC-02: {module: polynomes, niveau: partiel}
+  P-ALG-SEC-03: {module: polynomes, niveau: complet}
+  P-ALG-SEC-04: {module: polynomes, niveau: complet}
+  P-ALG-SEC-05: {module: polynomes, niveau: complet}
+  P-ALG-SEC-06: {module: polynomes, niveau: complet}
+  P-ALG-SEC-07: {module: polynomes, niveau: complet}

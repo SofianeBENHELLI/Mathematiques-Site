@@ -1,20 +1,153 @@
-const $=id=>document.getElementById(id);
-const state={a:1,b:-4,c:3,mode:'coeff',cx:1,cy:2,scale:45};
-const fmt=n=>{if(Math.abs(n)<1e-10)n=0;return new Intl.NumberFormat('fr-FR',{maximumFractionDigits:4}).format(n)};
-const vertex=()=>state.a===0?null:{h:-state.b/(2*state.a),k:state.c-state.b*state.b/(4*state.a)};
-const term=(n,s,first=false)=>n===0?'':`${n<0?'−':first?'':'+ '}${Math.abs(n)===1&&s?'':fmt(Math.abs(n))}${s}`;
-const polynomial=()=>[term(state.a,'x²',true),term(state.b,'x',state.a===0),term(state.c,'',state.a===0&&state.b===0)].filter(Boolean).join(' ')||'0';
-const factor=n=>`(x ${n<0?'+':'−'} ${fmt(Math.abs(n))})`;
-function roots(){const m=Study.analyze(state.a,state.b,state.c);return {delta:m.delta,values:m.roots}}
-function setMode(mode){state.lastVertex=vertex();state.mode=mode;$('coeff-tab').setAttribute('aria-selected',mode==='coeff');$('vertex-tab').setAttribute('aria-selected',mode==='vertex');if(mode==='vertex')$('canonical').open=true;buildControls();render()}
-function buildControls(){const v=vertex();const defs=state.mode==='coeff'?[['a','Ouverture',-5,5],['b','Coefficient de x',-10,10],['c','Ordonnée à l’origine',-10,10]]:[['a','Ouverture',-5,5],['h','Abscisse du sommet',-10,10],['k','Ordonnée du sommet',-10,10]];$('controls').innerHTML=defs.map(([key,label,min,max])=>`<div class="param" data-key="${key}"><div class="param-top"><label for="${key}-number">${key}<span>${label}</span></label><input id="${key}-number" type="number" step="any" aria-label="${label}" value="${key in state?state[key]:v?.[key]??0}"></div><input id="${key}-range" type="range" min="${min}" max="${max}" step="0.05" aria-label="${label}, curseur"><div class="range-labels"><span id="${key}-min">${min}</span><span id="${key}-max">${max}</span></div></div>`).join('');for(const [key]of defs)for(const type of ['number','range'])$(key+'-'+type).addEventListener('input',e=>{if(e.target.value==='')return;const val=Number(e.target.value);if(!Number.isFinite(val)||Math.abs(val)>1e6){e.target.setCustomValidity('Saisissez une valeur entre −1 000 000 et 1 000 000.');return}e.target.setCustomValidity('');change(key,val);render(e.target.id)});$('mode-help').textContent=state.mode==='coeff'?'Trois coefficients, une infinité de courbes.':'h déplace horizontalement, k verticalement.'}
-function change(key,val){if(state.mode==='vertex'){const v=vertex();if(key==='a'){const anchor=v??state.lastVertex;if(anchor){state.lastVertex={...anchor};state.a=val;state.b=-2*val*anchor.h;state.c=val*anchor.h*anchor.h+anchor.k}else state.a=val}else if(v){v[key]=val;state.b=-2*state.a*v.h;state.c=state.a*v.h*v.h+v.k}}else state[key]=val}
-function render(active){const v=vertex(),r=roots();$('equation').textContent='f(x) = '+polynomial();$('graph-kind').textContent=state.a!==0?'Parabole':state.b!==0?'Droite':'Fonction constante';$('linear-note').hidden=!!v;$('vertex-badge').hidden=!v;if(v)$('vertex-badge').innerHTML=`S <span>(${fmt(v.h)} ; ${fmt(v.k)})</span>`;for(const el of document.querySelectorAll('.param')){const key=el.dataset.key,val=key in state?state[key]:v?.[key]??0;const num=$(key+'-number'),range=$(key+'-range');num.disabled=range.disabled=!v&&['h','k'].includes(key);if(active!==num.id)num.value=Number(val.toPrecision(12));const limit=Math.max(key==='a'?5:10,Math.ceil(Math.abs(val)));range.min=-limit;range.max=limit;range.value=val;$(key+'-min').textContent=fmt(-limit);$(key+'-max').textContent=fmt(limit)}
-if(v){$('canonical-form').innerHTML=`${state.a===1?'':state.a===-1?'−':fmt(state.a)}<span class="h-color">${factor(v.h)}</span>² <span class="k-color">${v.k<0?'−':'+'} ${fmt(Math.abs(v.k))}</span>`;$('canonical-info').innerHTML=`Sommet <b>S(<span class="h-color">${fmt(v.h)}</span> ; <span class="k-color">${fmt(v.k)}</span>)</b>`}else{$('canonical-form').textContent='Pas de forme canonique du second degré';$('canonical-info').textContent='Le sommet n’est pas défini lorsque a = 0.'}
-$('edit-vertex').disabled=!v;const prefix=state.a===1?'':state.a===-1?'−':fmt(state.a);$('factor-form').textContent=!v?'f(x) = '+polynomial():r.values.length===2?prefix+factor(r.values[0])+factor(r.values[1]):r.values.length===1?prefix+factor(r.values[0])+'²':'Aucune factorisation sur ℝ';$('roots-info').textContent=!v?(state.b!==0?'Racine : x = '+fmt(-state.c/state.b):state.c===0?'Tout réel est solution de f(x) = 0.':'Aucune racine.'):r.values.length===2?`x₁ = ${fmt(r.values[0])}   •   x₂ = ${fmt(r.values[1])}`:r.values.length===1?`Racine double : x₀ = ${fmt(r.values[0])}`:'La courbe ne coupe pas l’axe des x.';$('delta-info').textContent=v?`Δ = b² − 4ac = (${fmt(state.b)})² − 4 × (${fmt(state.a)}) × (${fmt(state.c)}) = ${fmt(r.delta)}`:'Le discriminant du second degré ne s’applique pas ici.';renderStudy();draw()}
-let W=800,H=520;const sx=x=>W/2+(x-state.cx)*state.scale,sy=y=>H/2-(y-state.cy)*state.scale;const wx=x=>state.cx+(x-W/2)/state.scale,wy=y=>state.cy-(y-H/2)/state.scale;
-function draw(){const svg=$('graph');W=svg.clientWidth||800;H=svg.clientHeight||520;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);const step0=60/state.scale,power=10**Math.floor(Math.log10(step0)),step=[1,2,5,10].map(n=>n*power).find(n=>n>=step0);let out=`<defs><clipPath id="plot-clip"><rect width="${W}" height="${H}"/></clipPath></defs><rect width="${W}" height="${H}" fill="#fff"/>`;for(let x=Math.ceil(wx(0)/step)*step;x<=wx(W);x+=step){const px=sx(x);out+=`<line x1="${px}" x2="${px}" y1="0" y2="${H}" stroke="#edf0f6"/><text x="${px}" y="${Math.max(17,Math.min(H-9,sy(0)+21))}" text-anchor="middle" font-size="11" fill="#96a0b3">${fmt(x)}</text>`}for(let y=Math.ceil(wy(H)/step)*step;y<=wy(0);y+=step){const py=sy(y);out+=`<line x1="0" x2="${W}" y1="${py}" y2="${py}" stroke="#edf0f6"/>`;if(Math.abs(y)>step*.001)out+=`<text x="${Math.max(10,Math.min(W-30,sx(0)-10))}" y="${py-7}" text-anchor="end" font-size="11" fill="#96a0b3">${fmt(y)}</text>`}out+=`<g clip-path="url(#plot-clip)"><line x1="${sx(0)}" x2="${sx(0)}" y1="0" y2="${H}" stroke="#bec7d9"/><line x1="0" x2="${W}" y1="${sy(0)}" y2="${sy(0)}" stroke="#bec7d9"/>`;const v=vertex();if(v)out+=`<path d="M${sx(v.h)} ${sy(0)}V${sy(v.k)}H${sx(0)}" fill="none" stroke="#e7a16c" stroke-dasharray="5 5"/>`;let d='';for(let px=-3;px<=W+3;px+=2){const x=wx(px),y=(state.a*x+state.b)*x+state.c;d+=(px===-3?'M':'L')+px+' '+Math.max(-1e8,Math.min(1e8,sy(y)))+' '}out+=`<path d="${d}" fill="none" stroke="#3459e8" stroke-width="3" stroke-linecap="round"/><path class="curve-hit" data-drag="true" d="${d}" fill="none" stroke="transparent" stroke-width="26"/>`;if($('roots').open)for(const [i,x]of roots().values.entries()){out+=`<circle cx="${sx(x)}" cy="${sy(0)}" r="5" fill="#078679" stroke="white" stroke-width="2"/><text class="root-label" x="${sx(x)}" y="${sy(0)-15}" text-anchor="middle">${roots().values.length===1?'x₀':i===0?'x₁':'x₂'} = ${fmt(x)}</text>`}if(v)out+=`<circle cx="${sx(v.h)}" cy="${sy(v.k)}" r="13" fill="#da681e" opacity=".12"/><circle cx="${sx(v.h)}" cy="${sy(v.k)}" r="6" fill="#da681e" stroke="white" stroke-width="2"/><circle class="vertex-hit" data-drag="true" cx="${sx(v.h)}" cy="${sy(v.k)}" r="22" fill="transparent"/>`;out+='</g>';svg.innerHTML=out}
-let drag=null;$('graph').addEventListener('pointerdown',e=>{if(!e.target.dataset.drag||!vertex())return;const box=$('graph').getBoundingClientRect();drag={x:wx(e.clientX-box.left),y:wy(e.clientY-box.top),...vertex()};$('graph').setPointerCapture(e.pointerId);$('graph').classList.add('dragging');e.preventDefault()});$('graph').addEventListener('pointermove',e=>{if(!drag)return;const box=$('graph').getBoundingClientRect(),h=drag.h+wx(e.clientX-box.left)-drag.x,k=drag.k+wy(e.clientY-box.top)-drag.y;state.b=-2*state.a*h;state.c=state.a*h*h+k;render()});function endDrag(){drag=null;$('graph').classList.remove('dragging')}for(const event of ['pointerup','pointercancel','lostpointercapture'])$('graph').addEventListener(event,endDrag);
-$('coeff-tab').onclick=()=>setMode('coeff');$('vertex-tab').onclick=()=>setMode('vertex');$('edit-vertex').onclick=()=>setMode('vertex');$('roots').addEventListener('toggle',draw);$('reset').onclick=()=>{Object.assign(state,{a:1,b:-4,c:3,cx:1,cy:2,scale:45});$('canonical').open=false;$('roots').open=false;setMode('coeff')};$('center').onclick=()=>{const v=vertex();state.cx=v?.h??0;state.cy=v?.k??state.c;draw()};$('zoom-in').onclick=()=>{state.scale=Math.min(250,state.scale*1.3);draw()};$('zoom-out').onclick=()=>{state.scale=Math.max(.01,state.scale/1.3);draw()};new ResizeObserver(draw).observe($('graph-wrap'));buildControls();render();
-const webContext=document.modelContext;
-if(webContext?.registerTool){const lifetime=new AbortController();window.addEventListener('pagehide',()=>lifetime.abort(),{once:true});try{Promise.resolve(webContext.registerTool({name:'set_polynomial',title:'Modifier le polynôme',description:'Modifier les coefficients a, b, c et synchroniser la courbe et toutes ses formes.',inputSchema:{type:'object',properties:{a:{type:'number'},b:{type:'number'},c:{type:'number'}},required:['a','b','c'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){if(!input||Object.keys(input).some(key=>!['a','b','c'].includes(key))||!['a','b','c'].every(key=>typeof input[key]==='number'&&Number.isFinite(input[key])&&Math.abs(input[key])<=1e6))throw new Error('Trois coefficients finis entre −1 000 000 et 1 000 000 sont requis.');Object.assign(state,input);render();return{a:state.a,b:state.b,c:state.c,sommet:vertex(),racines:roots().values}}},{signal:lifetime.signal})).catch(()=>{})}catch{}}
+/* Mini-site Second degré : ateliers. Dépend de fx.js et mini.js. */
+(function () {
+  'use strict';
+  var h = Mini.h, fmt = FX.fmt;
+  var BLUE = '#3459e8', ORANGE = '#da681e', PURPLE = '#8053bd', GREEN = '#1d7a46', GREY = '#8b96b0';
+  function r2(v) { return fmt(Math.round(v * 100) / 100); }
+  function r3(v) { return fmt(Math.round(v * 1000) / 1000); }
+  function sgn(v) { return v < 0 ? '− ' + r2(-v) : '+ ' + r2(v); }
+  function roots(a, b, c) { var D = b * b - 4 * a * c; if (D < -1e-12) return []; if (Math.abs(D) < 1e-12) return [-b / (2 * a)]; var s = Math.sqrt(D); return [(-b - s) / (2 * a), (-b + s) / (2 * a)].sort(function (x, y) { return x - y; }); }
+
+  /* 1. Explorer le trinôme */
+  Mini.paramLab('lab1', {
+    title: '1. Explorer ax² + bx + c', sub: 'discriminant, racines, sommet', label: 'Parabole de ax² + bx + c',
+    params: [{ k: 'a', label: 'a =', min: -3, max: 3, step: 0.5, val: 1 }, { k: 'b', label: 'b =', min: -6, max: 6, step: 0.5, val: -2 }, { k: 'c', label: 'c =', min: -6, max: 6, step: 0.5, val: -3 }],
+    curves: [{ expr: 'a*x^2+b*x+c', color: BLUE }],
+    win: [-6, 6, -8, 8],
+    presets: [{ name: 'Deux racines : x² − 2x − 3', vals: { a: 1, b: -2, c: -3 } }, { name: 'Racine double : x² − 4x + 4', vals: { a: 1, b: -4, c: 4 } }, { name: 'Aucune racine : x² + 2x + 3', vals: { a: 1, b: 2, c: 3 } }, { name: 'Ouverte vers le bas : −x² + 4', vals: { a: -1, b: 0, c: 4 } }],
+    extra: function (g, v) {
+      if (v.a === 0) return;
+      var al = -v.b / (2 * v.a), be = v.a * al * al + v.b * al + v.c;
+      g.line(al, -8, al, 8, GREY, { dashed: true }); g.point(al, be, PURPLE, { r: 6 });
+      roots(v.a, v.b, v.c).forEach(function (x) { g.point(x, 0, GREEN, { r: 6 }); });
+    },
+    readout: function (v) {
+      if (v.a === 0) return '<b>a = 0 : ce n’est plus un trinôme du second degré</b> (c’est une droite). Choisis a ≠ 0.';
+      var D = v.b * v.b - 4 * v.a * v.c, al = -v.b / (2 * v.a), be = v.a * al * al + v.b * al + v.c, R = roots(v.a, v.b, v.c);
+      return 'f(x) = ' + r2(v.a) + 'x² ' + sgn(v.b) + 'x ' + sgn(v.c) + '<br>Δ = b² − 4ac = <b class="mono">' + r2(D) + '</b> ' + (D > 1e-12 ? '&gt; 0 : <b>deux racines</b>' : D < -1e-12 ? '&lt; 0 : <b>aucune racine réelle</b>' : '= 0 : <b>une racine double</b>') +
+        (R.length ? '<br>Racines (points verts) : ' + R.map(function (x) { return '<b class="mono">' + r3(x) + '</b>'; }).join(' et ') : '') +
+        '<br>Sommet (point violet) : S(<b class="mono">' + r3(al) + '</b> ; <b class="mono">' + r3(be) + '</b>), axe x = ' + r3(al) + '<br>' + (v.a > 0 ? 'a &gt; 0 : parabole en U, minimum ' + r3(be) : 'a &lt; 0 : parabole en ∩, maximum ' + r3(be)) + '<br>f(0) = c = ' + r2(v.c) + ' (ordonnée à l’origine).';
+    }
+  });
+
+  /* 2. Forme canonique a(x − α)² + β */
+  Mini.paramLab('lab2', {
+    title: '2. Forme canonique : a(x − α)² + β', sub: 'le sommet se lit directement', label: 'Parabole en forme canonique',
+    params: [{ k: 'a', label: 'a =', min: -3, max: 3, step: 0.5, val: 1 }, { k: 'p', label: 'α (abscisse du sommet) =', min: -4, max: 4, step: 0.5, val: 2 }, { k: 'q', label: 'β (ordonnée du sommet) =', min: -6, max: 6, step: 0.5, val: -1 }],
+    curves: [{ expr: 'a*(x-p)^2+q', color: BLUE }],
+    win: [-6, 6, -8, 8],
+    extra: function (g, v) { g.line(v.p, -8, v.p, 8, GREY, { dashed: true }); g.point(v.p, v.q, PURPLE, { r: 6.5 }); },
+    readout: function (v) {
+      if (v.a === 0) return '<b>a = 0 : choisis a ≠ 0.</b>';
+      var b = -2 * v.a * v.p, c = v.a * v.p * v.p + v.q, D = b * b - 4 * v.a * c;
+      return 'Canonique : f(x) = ' + r2(v.a) + '(x ' + sgn(-v.p) + ')² ' + sgn(v.q) + '<br>Développée : f(x) = ' + r2(v.a) + 'x² ' + sgn(b) + 'x ' + sgn(c) + '<br>Dictionnaire : b = −2aα = <b class="mono">' + r2(b) + '</b>, c = aα² + β = <b class="mono">' + r2(c) + '</b>.<br>Retour : α = −b/(2a) = <b class="mono">' + r2(-b / (2 * v.a)) + '</b>, β = f(α) = <b class="mono">' + r2(v.q) + '</b>.<br>Δ = b² − 4ac = <b class="mono">' + r2(D) + '</b> : ' + (v.a * v.q < 0 ? 'le sommet est de l’autre côté de l’axe que l’ouverture, donc deux racines.' : Math.abs(v.q) < 1e-9 ? 'le sommet est sur l’axe : racine double.' : 'le sommet est du même côté que l’ouverture : aucune racine.');
+    }
+  });
+
+  /* 3. Signe et inéquation */
+  (function () {
+    var L = Mini.makeLab('lab3', '3. Signe du trinôme et inéquations', 'lire l’ensemble solution');
+    var g = new FX.Graph(L.graph, { xmin: -6, xmax: 6, ymin: -8, ymax: 8, label: 'Parabole et zone solution' });
+    var out = h('<div class="readout" aria-live="polite"></div>');
+    var s = { a: 1, b: -1, c: -6 }, mode = 3;
+    var ops = ['f(x) > 0', 'f(x) ≥ 0', 'f(x) < 0', 'f(x) ≤ 0'];
+    function setText(R, a, op) {
+      var pos = op < 2, strict = (op === 0 || op === 2); // 0: >, 1: >=, 2: <, 3: <=
+      var L_ = strict ? ']' : '[', R_ = strict ? '[' : ']';
+      var wantPositive = pos, aPos = a > 0;
+      if (!R.length) { var always = (wantPositive === aPos); return always ? 'ℝ tout entier (Δ &lt; 0 : f garde le signe de a)' : '∅ (aucune solution)'; }
+      if (R.length === 1) {
+        var r = r2(R[0]);
+        if (wantPositive === aPos) return strict ? 'ℝ \\ {' + r + '}' : 'ℝ tout entier';
+        return strict ? '∅ (aucune solution)' : '{' + r + '}';
+      }
+      var x1 = r2(R[0]), x2 = r2(R[1]);
+      var outside = (wantPositive === aPos);
+      if (outside) return ']−∞ ; ' + x1 + (strict ? '[' : ']') + ' ∪ ' + (strict ? ']' : '[') + x2 + ' ; +∞[';
+      return (strict ? ']' : '[') + x1 + ' ; ' + x2 + (strict ? '[' : ']');
+    }
+    function draw() {
+      var R = roots(s.a, s.b, s.c), op = mode, f = function (x) { return s.a * x * x + s.b * x + s.c; };
+      g.clear(); g.line(-6, 0, 6, 0, GREY, { width: 1 });
+      // zone solution : balayage fin
+      var steps = 600, prev = null, start = null, strict = (op === 0 || op === 2), wantPos = op < 2;
+      function ok(x) { var v = f(x); return wantPos ? (strict ? v > 1e-12 : v >= -1e-12) : (strict ? v < -1e-12 : v <= 1e-12); }
+      for (var i = 0; i <= steps; i++) {
+        var x = -6 + 12 * i / steps, o = ok(x);
+        if (o && start === null) start = x;
+        if ((!o || i === steps) && start !== null) { g.rect(start, o ? x : x - 12 / steps, -0.15, 0.15, GREEN, { opacity: 0.55 }); start = null; }
+      }
+      g.curve(f, BLUE);
+      R.forEach(function (x) { g.point(x, 0, PURPLE, { r: 6, open: !(op === 1 || op === 3) }); });
+      if (s.a === 0) { out.innerHTML = '<b>a = 0 : choisis a ≠ 0.</b>'; return; }
+      var D = s.b * s.b - 4 * s.a * s.c;
+      out.innerHTML = 'f(x) = ' + r2(s.a) + 'x² ' + sgn(s.b) + 'x ' + sgn(s.c) + ', Δ = <b class="mono">' + r2(D) + '</b>' + (R.length ? ', racines ' + R.map(function (x) { return '<b class="mono">' + r2(x) + '</b>'; }).join(' et ') : '') + '<br>Inéquation <b>' + ops[op] + '</b><br>Solution (bande verte sur l’axe) : <b>' + setText(R, s.a, op) + '</b><br>Point plein = racine incluse (inégalité large), point creux = racine exclue.';
+    }
+    var opSel = Mini.select('p3-op', 'Inéquation', ops, function (i) { mode = i; draw(); });
+    opSel.select.value = '3';
+    L.side.appendChild(opSel);
+    L.side.appendChild(Mini.slider('p3-a', 'a =', -3, 3, 0.5, 1, function (v) { s.a = v; draw(); }));
+    L.side.appendChild(Mini.slider('p3-b', 'b =', -6, 6, 0.5, -1, function (v) { s.b = v; draw(); }));
+    L.side.appendChild(Mini.slider('p3-c', 'c =', -8, 8, 0.5, -6, function (v) { s.c = v; draw(); }));
+    L.side.appendChild(out); draw();
+  })();
+
+  /* 4. Somme et produit */
+  Mini.paramLab('lab4', {
+    title: '4. Somme et produit des racines', sub: 'construire un trinôme de racines données', label: 'Parabole de racines x1 et x2',
+    params: [{ k: 'r', label: 'Racine x₁ =', min: -5, max: 5, step: 0.5, val: -1 }, { k: 's', label: 'Racine x₂ =', min: -5, max: 5, step: 0.5, val: 3 }],
+    curves: [{ expr: '(x-r)*(x-s)', color: BLUE }],
+    win: [-6, 6, -8, 8],
+    extra: function (g, v) { g.point(v.r, 0, GREEN, { r: 6.5 }); g.point(v.s, 0, GREEN, { r: 6.5 }); g.line((v.r + v.s) / 2, -8, (v.r + v.s) / 2, 8, GREY, { dashed: true }); },
+    readout: function (v) {
+      var S = v.r + v.s, P = v.r * v.s;
+      return 'f(x) = (x − ' + r2(v.r) + ')(x − ' + r2(v.s) + ') = x² ' + sgn(-S) + 'x ' + sgn(P) + '<br>Somme S = x₁ + x₂ = <b class="mono">' + r2(S) + '</b> = −b/a<br>Produit P = x₁ × x₂ = <b class="mono">' + r2(P) + '</b> = c/a<br>Le trinôme est <b>x² − S·x + P</b> : lis S et P sur la forme développée pour retrouver les racines.<br>Axe de symétrie : x = (x₁ + x₂)/2 = <b class="mono">' + r2(S / 2) + '</b> (pointillé).';
+    }
+  });
+
+  /* 5. Changement d'inconnue */
+  Mini.paramLab('lab5', {
+    title: '5. Se ramener au second degré : ax⁴ + bx² + c', sub: 'X = x², puis retour à x', label: 'Courbe de ax4 + bx2 + c',
+    params: [{ k: 'a', label: 'a =', min: -2, max: 2, step: 0.5, val: 1 }, { k: 'b', label: 'b =', min: -8, max: 8, step: 0.5, val: -5 }, { k: 'c', label: 'c =', min: -6, max: 8, step: 0.5, val: 4 }],
+    curves: [{ expr: 'a*x^4+b*x^2+c', color: BLUE }],
+    win: [-4, 4, -10, 10],
+    presets: [{ name: 'x⁴ − 5x² + 4 : 4 solutions', vals: { a: 1, b: -5, c: 4 } }, { name: 'x⁴ + x² − 2 : 2 solutions', vals: { a: 1, b: 1, c: -2 } }, { name: 'x⁴ + 2x² + 1 : 0 solution', vals: { a: 1, b: 2, c: 1 } }, { name: 'x⁴ − 4x² : 3 solutions', vals: { a: 1, b: -4, c: 0 } }],
+    extra: function (g, v) {
+      if (v.a === 0) return;
+      roots(v.a, v.b, v.c).forEach(function (X) { if (X > 1e-12) { g.point(Math.sqrt(X), 0, GREEN, { r: 6 }); g.point(-Math.sqrt(X), 0, GREEN, { r: 6 }); } else if (Math.abs(X) <= 1e-12) g.point(0, 0, GREEN, { r: 6 }); });
+    },
+    readout: function (v) {
+      if (v.a === 0) return '<b>a = 0 : choisis a ≠ 0.</b>';
+      var R = roots(v.a, v.b, v.c), D = v.b * v.b - 4 * v.a * v.c, sol = [];
+      R.forEach(function (X) { if (X > 1e-12) { sol.push(Math.sqrt(X)); sol.push(-Math.sqrt(X)); } else if (Math.abs(X) <= 1e-12) sol.push(0); });
+      var txt = 'Avec X = x² : ' + r2(v.a) + 'X² ' + sgn(v.b) + 'X ' + sgn(v.c) + ' = 0, Δ = <b class="mono">' + r2(D) + '</b><br>' + (R.length ? 'Valeurs de X : ' + R.map(function (X) { return '<b class="mono">' + r3(X) + '</b>' + (X < -1e-12 ? ' (négative : impossible, x² ≥ 0)' : ''); }).join(' ; ') : 'Aucune valeur de X.');
+      return txt + '<br>Retour à x : <b>' + sol.length + ' solution' + (sol.length > 1 ? 's' : '') + '</b>' + (sol.length ? ' : ' + sol.sort(function (p, q) { return p - q; }).map(function (x) { return r3(x); }).join(' ; ') : '') + ' (points verts).';
+    }
+  });
+
+  /* 6. Optimiser : rectangle de périmètre fixé */
+  (function () {
+    var L = Mini.makeLab('lab6', '6. Optimiser : l’aire d’un rectangle', 'périmètre 20 m, largeur x');
+    var g = new FX.Graph(L.graph, { xmin: -0.5, xmax: 10.5, ymin: -2, ymax: 28, label: 'Aire du rectangle en fonction de sa largeur' });
+    var out = h('<div class="readout" aria-live="polite"></div>');
+    function draw(x) {
+      g.clear(); g.curve(function (t) { return t * (10 - t); }, BLUE, { from: 0, to: 10 });
+      g.point(5, 25, GREEN, { r: 6 }); g.label(5, 25, 'maximum', GREEN);
+      g.point(x, x * (10 - x), ORANGE, { r: 6.5 }); g.line(x, 0, x, x * (10 - x), ORANGE, { dashed: true });
+      out.innerHTML = 'Largeur x = <b class="mono">' + r2(x) + '</b> m, longueur 10 − x = <b class="mono">' + r2(10 - x) + '</b> m<br>Aire A(x) = x(10 − x) = −x² + 10x = <b class="mono">' + r2(x * (10 - x)) + '</b> m²<br>a = −1 &lt; 0 : maximum au sommet x = −b/(2a) = 5, A(5) = 25.<br>Forme canonique : A(x) = 25 − (x − 5)². L’aire est maximale quand le rectangle est un carré.';
+    }
+    L.side.appendChild(Mini.slider('p6-x', 'Largeur x (m) =', 0, 10, 0.25, 3, draw)); L.side.appendChild(out); draw(3);
+  })();
+
+  Mini.exercises(document.getElementById('exos'), window.POL_EX, 'second-degre');
+  Mini.checklist(document.getElementById('checklist'), 'second-degre', [
+    'Je passe de la forme développée à la forme canonique, et inversement.',
+    'Je calcule Δ sans me tromper de signe et j’en déduis le nombre de racines.',
+    'Je donne les racines et je factorise ax² + bx + c.',
+    'Je lis le signe d’un trinôme et je résous une inéquation du second degré.',
+    'Je trouve le sommet et les variations d’une parabole.',
+    'J’utilise somme (−b/a) et produit (c/a) des racines.',
+    'Je résous ax⁴ + bx² + c = 0 par changement d’inconnue, en revenant à x.',
+    'Je sais refaire la démonstration des formules de racines.'
+  ]);
+})();
