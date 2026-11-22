@@ -30,4 +30,48 @@
       setInterval(check, 30 * 60 * 1000);
     }).catch(function () { /* hors ligne ou bloqué : le site marche sans */ });
   });
+
+  /* ---- Bouton « Installer l'application » : Android et ordinateur (invite native), iPhone et iPad (mode d'emploi) ---- */
+  var deferred = null, buttons = [];
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/i.test(ua);
+  function installed() { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true; }
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; });
+  window.addEventListener('appinstalled', function () { deferred = null; buttons.forEach(function (b) { b.remove(); }); buttons = []; });
+
+  function steps() {
+    if (isIOS) return ['Ouvre ce site dans <b>Safari</b> (sur iPhone et iPad, c’est le plus fiable).', 'Touche le bouton <b>Partager</b> (le carré avec une flèche vers le haut, en bas ou en haut de l’écran).', 'Fais défiler et touche <b>Sur l’écran d’accueil</b>.', 'Touche <b>Ajouter</b>. L’icône « Maths de Sanaa » apparaît sur l’écran d’accueil.'];
+    if (isAndroid) return ['Ouvre ce site dans <b>Chrome</b>.', 'Touche le menu <b>⋮</b> (en haut à droite).', 'Touche <b>Installer l’application</b> (ou <b>Ajouter à l’écran d’accueil</b>).', 'Confirme avec <b>Installer</b>.'];
+    return ['Dans Chrome ou Edge, cherche l’icône <b>Installer</b> à droite de la barre d’adresse (ou le menu ⋮ puis <b>Installer Maths de Sanaa</b>).', 'Sur Safari (Mac) : menu <b>Fichier</b> puis <b>Ajouter au Dock</b>.'];
+  }
+  function dialog() {
+    if (document.getElementById('install-dialog')) return;
+    var o = document.createElement('div'); o.id = 'install-dialog'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-modal', 'true'); o.setAttribute('aria-label', 'Installer l’application');
+    o.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(20,30,70,.5);display:flex;align-items:flex-end;justify-content:center;padding:12px;font-family:system-ui,-apple-system,Segoe UI,sans-serif';
+    var c = document.createElement('div'); c.style.cssText = 'background:#fff;color:#20283d;border-radius:16px;padding:20px;max-width:460px;width:100%;box-shadow:0 12px 40px rgba(20,30,70,.4);max-height:90vh;overflow:auto';
+    c.innerHTML = '<h2 style="margin:0 0 6px;font-size:20px">Installer les maths de Sanaa</h2><p style="margin:0 0 12px;color:#53617a;font-size:15px;line-height:1.5">L’application s’ouvre en plein écran, comme une vraie appli, et marche aussi sans connexion une fois chargée.</p><ol style="margin:0 0 16px;padding-left:22px;font-size:16px;line-height:1.6">' + steps().map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ol>';
+    var ok = document.createElement('button'); ok.type = 'button'; ok.textContent = 'J’ai compris';
+    ok.style.cssText = 'width:100%;min-height:48px;border:0;border-radius:10px;background:#3459e8;color:#fff;font:700 16px system-ui,sans-serif;cursor:pointer';
+    function close() { o.remove(); document.removeEventListener('keydown', onKey); }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    ok.onclick = close; o.addEventListener('click', function (e) { if (e.target === o) close(); }); document.addEventListener('keydown', onKey);
+    c.appendChild(ok); o.appendChild(c); document.body.appendChild(o); ok.focus();
+  }
+  function onInstall() {
+    if (deferred) { var d = deferred; deferred = null; d.prompt(); d.userChoice.finally(function () {}); }
+    else dialog();
+  }
+  function makeButton(style) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'btn-install'; b.textContent = '⤓ Installer l’appli'; b.style.cssText = style; b.onclick = onInstall; buttons.push(b); return b;
+  }
+  function mountInstall() {
+    if (installed()) return;
+    var row = document.querySelector('#sitenav > div');
+    if (row && !row.querySelector('.btn-install')) row.insertBefore(makeButton('flex:none;display:inline-flex;align-items:center;min-height:40px;padding:6px 14px;border-radius:999px;border:0;background:#20283d;color:#fff;font:600 14px system-ui,sans-serif;white-space:nowrap;cursor:pointer'), row.firstChild);
+    var hl = document.querySelector('.header-links');
+    if (hl && !hl.querySelector('.btn-install')) hl.appendChild(makeButton('min-height:44px;padding:8px 14px;border-radius:10px;border:0;background:#20283d;color:#fff;font:600 14px system-ui,sans-serif;cursor:pointer;margin-left:8px'));
+  }
+  window.addEventListener('load', function () { setTimeout(mountInstall, 0); });
+  window.PWAInstall = { open: onInstall, installed: installed };
 })();
